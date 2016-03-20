@@ -1,0 +1,93 @@
+---
+title: "kirmire_HW4"
+author: "Colin Kirkmire"
+date: "March 18, 2016"
+output: html_document
+---
+
+1)
+(a) Create a scatterplot of log(Force) vs. log(Height) with Species coded by color (include a
+legend). Does the relationship between the variables appear similar for the three species?
+
+
+```{r}
+ Crabs <- read.csv("F:/STAT452/Homework#4/Crabs.csv")
+ library(ggplot2)
+ 
+ Crabs$logForce<-log(Crabs$Force)
+ Crabs$logHeight<-log(Crabs$Height)
+ Crabs$Species<-as.factor(Crabs$Species)
+ 
+p <- ggplot(Crabs, aes(logForce,logHeight))
+p + geom_point(aes(colour = factor(Crabs$Species)),size = 3)+
+ggtitle("Log(Height) vs Log (Force) by Factor")
+
+```
+
+(b) Fit a model which assumes a linear relationship between log(Force) and log(Height)
+with different intercepts and different slopes for the three species. Assess the model
+assumptions.
+
+```{r}
+model1<-lm(Crabs$Height~Crabs$logForce+Crabs$Species+Crabs$Force:Crabs$Species)
+
+summary(model1)
+```
+
+(c) Test the hypothesis that all three species have the same slope with an F test.
+```{r}
+fit <- aov(y ~ A, data=mydataframe)
+
+```
+
+(d) Test separately (with t-tests) the hypothesis that C. productus and H. nudus have the
+same slope. Calculate and interpret a 95% confidence interval for the difference in the
+slopes.
+
+```{r}
+
+
+```
+
+(e) Repeat part (d) for C. productus and L. bellus.
+
+```{r}
+
+
+```
+2. The data file Real estate project.csv contains sales data on 894 houses: price ($), living
+area (sq. ft), number of bedrooms, number of bathrooms, year of construction, and garage
+spaces.
+
+• Row 185 contains a missing value for bathrooms; just eliminate the row at the start. If
+df is the data frame, then do df <- df[-185,].
+
+• Compute Age = 2012-Year (e.g., df$Age <- 2012-df$Year). You can them eliminate
+the Year variable with df$Year <- NULL.
+
+• Present a scatterplot matrix (I suggest using ggpairs in library GGally). Do you notice
+any strong associations with Price? Are any transformations suggested?
+
+• Fit a model for predicting Price from all the other variables. Note: a shorthand way to
+specify such a model is lm(Price∼.,data=df. The . means “all the other variables in
+the data frame”. Assess the model assumptions with residual plots. Do they appear to
+be met?
+
+1
+• Fit the model using log of Price as the response variable. Are the model assumptions
+better satisfied?
+
+• Garage and Price both have big P-values. Could we reasonably eliminate both? Test
+the hypothesis that both coefficients are 0 with an “Extra Sum of Squares” F test.
+
+• Fit the model without Garage and Age. What happens to se? Does this model appear
+about as good as the model with all the variables?
+
+• Interpret the coefficients of the reduced model. Interpret the coefficient for Living Area
+in a meaningful increment. That is, rather than saying what change in Price a 1 square
+foot increase in area is associated with, say what a 100 sq. ft. increase in area would do.
+Also, remember, it’s a log Price so interpret the coefficient in terms of percent increase
+in Price.
+
+• Find confidence intervals for the coefficients and interpret them (you can integrate this
+into the previous part).
