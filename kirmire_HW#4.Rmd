@@ -18,10 +18,13 @@ legend). Does the relationship between the variables appear similar for the thre
  Crabs$logHeight<-log(Crabs$Height)
  Crabs$Species<-as.factor(Crabs$Species)
  
-p <- ggplot(Crabs, aes(logForce,logHeight))
-p + geom_point(aes(colour = factor(Crabs$Species)),size = 3)+
-ggtitle("Log(Height) vs Log (Force) by Factor")
-
+ggplot(Crabs, aes(x=Crabs$logForce,y=Crabs$logHeight,color=Crabs$Species))+
+  geom_point(size=2)+
+  geom_smooth(method="lm",se=FALSE)+
+  ggtitle("Log(Height) vs Log (Force) by Factor")+
+  xlab("Log(Force)")+
+  ylab("Log(Height)")
+  
 ```
 
 (b) Fit a model which assumes a linear relationship between log(Force) and log(Height)
@@ -29,7 +32,7 @@ with different intercepts and different slopes for the three species. Assess the
 assumptions.
 
 ```{r}
-model1<-lm(Crabs$Height~Crabs$logForce+Crabs$Species+Crabs$Force:Crabs$Species)
+model1<-lm(Crabs$logHeight~Crabs$logForce+Crabs$Species+Crabs$logForce:Crabs$Species)
 
 summary(model1)
 ```
