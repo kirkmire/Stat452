@@ -21,7 +21,9 @@ legend). Does the relationship between the variables appear similar for the thre
 ggplot(Crabs, aes(x=Crabs$logForce,y=Crabs$logHeight,color=Crabs$Species))+
   geom_point(size=2)+
   geom_smooth(method="lm",se=FALSE)+
+
   ggtitle("Log(Height) vs Log (Force) by Species")+
+  ggtitle("Log(Height) vs Log (Force) by Factor")+
   xlab("Log(Force)")+
   ylab("Log(Height)")
   
@@ -32,6 +34,7 @@ with different intercepts and different slopes for the three species. Assess the
 assumptions.
 
 ```{r}
+
 full.lm<-lm(Crabs$logHeight~Crabs$logForce*Crabs$Species)
 
 summary(full.lm)
@@ -40,6 +43,9 @@ summary(full.lm)
 boxplot(resid(full.lm)~predict(full.lm))
 hist(resid(full.lm),col="gray")
 qqnorm(resid(full.lm))
+
+model1<-lm(Crabs$logHeight~Crabs$logForce+Crabs$Species+Crabs$logForce:Crabs$Species)
+
 
 ```
 
