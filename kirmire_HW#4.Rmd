@@ -81,26 +81,81 @@ the Year variable with df$Year <- NULL.
 • Present a scatterplot matrix (I suggest using ggpairs in library GGally). Do you notice
 any strong associations with Price? Are any transformations suggested?
 
+```{r}
+real.estate <- read.csv("F:/STAT452/Homework#4/Real_estate_project.csv")
+
+real.estate<- real.estate[-185,]
+
+real.estate$age<-2012-real.estate$Year
+
+real.estate$Year<-NULL
+
+library(GGally)
+
+pa<-ggpairs(real.estate)
+
+```
+
 • Fit a model for predicting Price from all the other variables. Note: a shorthand way to
 specify such a model is lm(Price∼.,data=df. The . means “all the other variables in
 the data frame”. Assess the model assumptions with residual plots. Do they appear to
 be met?
 
+```{r}
+full.lm.real.est<-lm(Price~.,data=real.estate)
+
+#Residual Plots#
+boxplot(resid(full.lm.real.est)~predict(full.lm.real.est))
+hist(resid(full.lm.real.est),col="gray")
+qqnorm(resid(full.lm.real.est))
+```
+
+
 1
 • Fit the model using log of Price as the response variable. Are the model assumptions
 better satisfied?
 
-• Garage and Price both have big P-values. Could we reasonably eliminate both? Test
+```{r}
+logP.full.lm.real.est<-lm(log(Price)~.,data=real.estate)
+
+summary(logP.full.lm.real.est)
+#Residual Plots#
+boxplot(resid(logP.full.lm.real.est)~predict(logP.full.lm.real.est))
+hist(resid(logP.full.lm.real.est),col="gray")
+qqnorm(resid(logP.full.lm.real.est))
+```
+
+
+• Garage and Age both have big P-values. Could we reasonably eliminate both? Test
 the hypothesis that both coefficients are 0 with an “Extra Sum of Squares” F test.
+
+```{r}
+reducedre.lm<-lm(log(Price)~Living.Area+Bedrooms+Bathrooms,data=real.estate)
+
+anova(reducedre.lm,logP.full.lm.real.est)
+
+```
 
 • Fit the model without Garage and Age. What happens to se? Does this model appear
 about as good as the model with all the variables?
+
+```{r}
+summary(reducedre.lm)
+
+#Residual Plots#
+boxplot(resid(reducedre.lm)~predict(reducedre.lm))
+hist(resid(reducedre.lm),col="gray")
+qqnorm(resid(reducedre.lm))
+```
+
 
 • Interpret the coefficients of the reduced model. Interpret the coefficient for Living Area
 in a meaningful increment. That is, rather than saying what change in Price a 1 square
 foot increase in area is associated with, say what a 100 sq. ft. increase in area would do.
 Also, remember, it’s a log Price so interpret the coefficient in terms of percent increase
 in Price.
+
+
 
 • Find confidence intervals for the coefficients and interpret them (you can integrate this
 into the previous part).
