@@ -1,0 +1,53 @@
+---
+title: "Lab#7"
+author: "Colin Kirkmire"
+date: "March 21, 2016"
+output: word_document
+---
+
+Homework [1]:
+```{r setup, include=FALSE}
+egyptians <- read.csv("F:/STAT 458/Lab7/egyptians.csv")
+
+model1 <- lm(MB ~ BH + BL +NH, data=egyptians)
+model1
+summary(model1)
+plot(fitted(model1), resid(model1), main="residual plot",
+xlab="predicted response",
+ylab="residuals")
+abline(h=0, lty=2)
+var1 <- predict(model1)
+var2 <- fitted (model1)
+```
+
+Homework[2]: Using the basscatch.csv data set, pick one or 2 variables which you hypothesize might be 0 and use this subset F test procedure to gather evidence on
+your hypothesis.
+
+```{r}
+basscatch <- read.csv("F:/STAT 458/Lab7/basscatch.csv")
+
+#Pairs Plots
+library(GGally)
+ggpairs(basscatch)
+
+#Subset F test
+modelfull <- lm(catch ~ residence + size + access + structure)
+modelpart <- lm(catch ~ residence + size)
+summary(modelfull)
+anova(modelfull)
+summary(modelpart)
+anova(modelpart)
+```
+
+Homework[2]: The data set crops.csv is mercury poisoning results of an agricultural experiment involving 3 kinds of crops (corn, wheat, and barley) planted in mercury tainted soil (called sludge). There are 6 levels of soil contamination, and the
+mercury content contained in the plants (the response variable) is measured. Compare corn with wheat to see if the β3 (the interaction term) is significant.
+Possibly construct a scatter plot with the 2 ablines() superimposed on the plot to see what you will end up with on the hypothesis test. Use the α = 0.05 level. You may want to add an x2 column of 0's and 1's as I did in my demonstration. Remember you will only be using rows 1 through 60 (i.e., [1:60]) for this test.
+
+```{r}
+crops <- read.csv("F:/STAT 458/Lab7/crops.csv")
+
+crops<-crops[1:60,]
+```
+
+
+

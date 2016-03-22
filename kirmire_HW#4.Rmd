@@ -5,6 +5,7 @@ date: "March 18, 2016"
 output: html_document
 ---
 
+
 1)
 (a) Create a scatterplot of log(Force) vs. log(Height) with Species coded by color (include a
 legend). Does the relationship between the variables appear similar for the three species?
