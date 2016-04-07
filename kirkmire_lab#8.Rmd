@@ -1,0 +1,46 @@
+---
+title: "Lab#8"
+author: "Colin Kirkmire"
+date: "April 7, 2016"
+output: word_document
+---
+
+Homework [1]: Do a lattice view of all pairs (use pairs(babies)) and find correlations of all variables (cor(babies) or, more properly cor(tmp)), as well as read the description of variables used in this data. Make a FULL MODEL of (only) the variables you think might be influencing baby weigh (wt). Describe what and why and how you did what you did. List the full model with beta values and model summary().
+Comment on your full model.
+```{r}
+library("UsingR")
+babies<-babies
+
+notthese<-(babies$gestation==999 | (babies$age==99)) | (babies$inc==98)
+tmp<-babies[!notthese,1:23]
+library(GGally)
+ggpairs(babies)
+
+cor(tmp)
+
+babywt.lm<-lm(wt~gestation+ht+number+time,data=tmp)
+
+summary(babywt.lm)
+
+plot(babywt.lm)
+
+```
+
+The lattice of pairs reveals a moderate correlation between birthweight and gestation (.41) and mother's height (.12). Smoking likely affects birthweight so all three smoking related variables will be included.  
+
+Gestation is the strongest predictor of birthweight according to the summary of the model, which makes sense considering the relatively strong correlation with birthweight.  The other predictors are statistically significant but have slightly larger standard errors.
+
+
+Homework [2]: Remove terms with backwards elimination procedures and come up
+with a working, useful model for the full babies model you generated in HW [1]
+above.
+
+```{r}
+redmodel1 <- update(fullmodel, . ~ . - seq.1, data=studrecs)
+```
+
+
+
+
+
+
