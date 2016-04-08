@@ -18,15 +18,20 @@ ggpairs(babies)
 
 cor(tmp)
 
-babywt.lm<-lm(wt~gestation+ht+number+time,data=tmp)
+babywt.lm<-lm(wt~gestation+ht+number+time+wt1+parity+date+marital,data=tmp)
 
 summary(babywt.lm)
 
 plot(babywt.lm)
 
+
+
+
+
+
 ```
 
-The lattice of pairs reveals a moderate correlation between birthweight and gestation (.41) and mother's height (.12). Smoking likely affects birthweight so all three smoking related variables will be included.  
+The lattice of pairs reveals a moderate correlation between birthweight and gestation (.41) and mother's height (.12). Smoking and mother's weight likely affects birthweight so all three smoking related variables and mothers weight will be included.  Income
 
 Gestation is the strongest predictor of birthweight according to the summary of the model, which makes sense considering the relatively strong correlation with birthweight.  The other predictors are statistically significant but have slightly larger standard errors.
 
@@ -36,7 +41,17 @@ with a working, useful model for the full babies model you generated in HW [1]
 above.
 
 ```{r}
-redmodel1 <- update(fullmodel, . ~ . - seq.1, data=studrecs)
+redmodel1 <- update(babywt.lm, . ~ . - marital, data=tmp)
+
+summary(redmodel1)
+
+redmodel2 <- update(redmodel1, . ~ . - wt1, data=tmp)
+
+summary(redmodel2)
+
+anova(babywt.lm,redmodel1)
+anova(redmodel1,redmodel2)
+
 ```
 
 
