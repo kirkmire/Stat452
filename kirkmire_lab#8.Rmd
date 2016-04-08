@@ -1,5 +1,5 @@
 ---
-title: "Lab#8"
+title: "Lab8"
 author: "Colin Kirkmire"
 date: "April 7, 2016"
 output: word_document
@@ -14,35 +14,32 @@ babies<-babies
 
 notthese<-(babies$gestation==999 | (babies$age==99)) | (babies$inc==98)
 tmp<-babies[!notthese,1:23]
-library(GGally)
-ggpairs(babies)
 
 cor(tmp)
 
-babywt.lm<-lm(wt~gestation+ht+number+time+wt1+parity+date+marital,data=tmp)
+babywt.lm<-lm(wt~gestation+ht+number+time+wt1+parity+date+age,data=tmp)
 
 summary(babywt.lm)
 
 plot(babywt.lm)
 
 
-
-
-
-
 ```
 
-The lattice of pairs reveals a moderate correlation between birthweight and gestation (.41) and mother's height (.12). Smoking and mother's weight likely affects birthweight so all three smoking related variables and mothers weight will be included.  Income
+The lattice of pairs reveals a moderate correlation between birthweight and gestation (.41) and mother's height (.12). Smoking and mother's weight likely affects birthweight so all three smoking related variables and mothers weight will be included. 
 
-Gestation is the strongest predictor of birthweight according to the summary of the model, which makes sense considering the relatively strong correlation with birthweight.  The other predictors are statistically significant but have slightly larger standard errors.
+Advances in medical technology and mother's health could plausibly lead to increases birth weight over time, so the "date" variable was inclded. The number of previous pregnancies could also relate to birthweight, although there is also not a strong correlation with birthweight.
+Mother's age was included because it is foreseeable that the birthweight of a baby could decrease with an increase in mother's age.
 
 
-Homework [2]: Remove terms with backwards elimination procedures and come up
-with a working, useful model for the full babies model you generated in HW [1]
+Gestation is the strongest predictor of birthweight according to the summary of the model, which makes sense considering the relatively strong correlation with birthweight.  The other predictors are statistically significant but have slightly larger standard errors, with the exception of mother's age which is not statistically significant.
+
+
+Homework [2]: Remove terms with backwards elimination procedures and come up with a working, useful model for the full babies model you generated in HW [1]
 above.
 
 ```{r}
-redmodel1 <- update(babywt.lm, . ~ . - marital, data=tmp)
+redmodel1 <- update(babywt.lm, . ~ . -age, data=tmp)
 
 summary(redmodel1)
 
