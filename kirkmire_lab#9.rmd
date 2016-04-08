@@ -5,26 +5,23 @@ date: "April 7, 2016"
 output: word_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Homework [1]: Using your full model from last week's babies data from the UsingR package, find a reduced model using AIC analysis and compare with your model reduced using partial-F tests.
+
+```{r}
+library("UsingR")
+babies<-babies
+
+notthese<-(babies$gestation==999 | (babies$age==99)) | (babies$inc==98)
+tmp<-babies[!notthese,1:23]
+
+babywt.lm<-lm(wt~gestation+ht+number+time+wt1+parity+date+marital,data=tmp)
+
+library(MASS)
+stepAIC(babywt.lm)
 ```
 
-## R Markdown
+Homework [2]: Take some quality time and analyze the example problem as well as the listing of techniques and R commands, pondering approaches, techniques and conclusions. Then write about 50 words saying what might be useful or not useful for
+you in what you see.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Homework [3]: You did an interaction plot in lab 7 on factors of the ratanxiety.csv data. Redo the interaction plot using the command interaction.plot() and
+compare the results.
