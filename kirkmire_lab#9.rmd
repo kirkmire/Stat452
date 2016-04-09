@@ -25,3 +25,10 @@ you in what you see.
 
 Homework [3]: You did an interaction plot in lab 7 on factors of the ratanxiety.csv data. Redo the interaction plot using the command interaction.plot() and
 compare the results.
+
+```{r}
+
+
+interaction.plot(mainfactor, tracefactor, response, legend=TRUE)
+```
+
