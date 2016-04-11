@@ -10,7 +10,24 @@ output: html_document
 
 sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
 
+#Check residuals#
 
+plot(resid(sat.lm)~predict(sat.lm))
+hist(resid(sat.lm),col="gray")
+qqnorm(resid(sat.lm))
+
+#Try log transformation#
+plot(sat$SAT~log(sat$Takers))
+plot(sat$SAT~(sat$Rank))
+
+sq.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank^2)
+
+
+#Re-Check residuals#
+
+plot(resid(sq.sat.lm)~predict(sq.sat.lm))
+hist(resid(sq.sat.lm),col="gray")
+qqnorm(resid(sq.sat.lm))
 
 
 summary(sat.lm)
