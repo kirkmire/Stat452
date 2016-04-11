@@ -1,0 +1,34 @@
+---
+title: 'HW #6'
+author: "Colin Kirkmire"
+date: "April 9, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+ sat <- read.csv("C:/Users/Colin/Desktop/Rprojects/Stat452/sat.csv")
+
+sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
+
+#Check residuals#
+
+plot(resid(sat.lm)~predict(sat.lm))
+hist(resid(sat.lm),col="gray")
+qqnorm(resid(sat.lm))
+
+#Try log transformation#
+plot(sat$SAT~log(sat$Takers))
+plot(sat$SAT~(sat$Rank))
+
+sq.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank^2)
+
+
+#Re-Check residuals#
+
+plot(resid(sq.sat.lm)~predict(sq.sat.lm))
+hist(resid(sq.sat.lm),col="gray")
+qqnorm(resid(sq.sat.lm))
+
+
+summary(sat.lm)
+```
