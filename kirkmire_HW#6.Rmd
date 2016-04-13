@@ -5,6 +5,7 @@ date: "April 9, 2016"
 output: html_document
 ---
 
+
 ```{r setup, include=FALSE}
  sat <- read.csv("C:/Users/Colin/Desktop/Rprojects/Stat452/sat.csv")
 
