@@ -83,14 +83,20 @@ sat$resid<-(resid(logt.sat.lm))
 ordered.sat<-sat[order(logt.sat$resid),]
 
 ```
-After adjusting for the number and quality of students taking the test, South Carolina,
-
+South Carolina,North Carolina and Mississippi performed worst after adjusting for the number and quality of students taking the test.  The top performing states were New Hampshire, Iowa and Connecticut.
 
 
 (e)
 ```{r}
+#Relationship between Expend, Years and Income#
+rel.expend.years.income<-sat[,c('SAT','Takers','Rank','resid')]
 
+library(GGally)
+ggpairs(rel.expend.years.income)
 ```
+
+
+
 
 (f)
 ```{r}
