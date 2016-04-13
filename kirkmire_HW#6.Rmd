@@ -32,3 +32,84 @@ qqnorm(resid(sq.sat.lm))
 
 summary(sat.lm)
 ```
+
+(a)
+```{r}
+#Relationship between SAT,Takers and Ranks#
+rel.sat<-sat[,c('SAT','Takers','Rank')]
+
+library(GGally)
+ggpairs(rel.sat)
+```
+
+There is a strong, negative relationship between the Takers variable and SAT. However, the Taker's variable appears to be decrease exponentially as statewide average SAT increases.
+As the percent of high school students who took the SAT increases, the state's average total score decreases exponentially. 
+
+In contrast, there is a strong positive  relationship between Rank and SAT.  The state's average total SAT score increases as the median percentile rank of test-takers increases. 
+
+The relationship between rank and takers appears to be very strong (r=-.94) and negatively linear. When the percent of a state's high schoolers who take the SAT increases, the median percentile rank of test-takers decreases.  
+
+##CHECK for outliers##
+
+(b)
+```{r}
+b.sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
+
+plot(resid(b.sat.lm)~b.sat.lm$fitted.values)
+
+library(car)
+crPlots(b.sat.lm)
+
+```
+
+(c)
+```{r}
+log.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank)
+
+plot(resid(log.sat.lm)~log.sat.lm$fitted.values)
+
+library(car)
+crPlots(log.sat.lm)
+```
+
+(d)
+```{r}
+
+state.resids<-as.data.frame(resid(log.sat.lm),log.sat.lm$xlevels)
+
+log.sat.lm$terms("variables")
+
+
+
+```
+
+(e)
+```{r}
+
+```
+
+(f)
+```{r}
+
+```
+
+(g)
+```{r}
+
+```
+
+(h)
+```{r}
+
+```
+
+(j)
+```{r}
+
+```
+
+
+
+
+
+
