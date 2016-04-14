@@ -43,17 +43,14 @@ library(GGally)
 ggpairs(rel.sat)
 ```
 
-There is a strong, negative relationship between the Takers variable and SAT. However, the Taker's variable appears to be decrease exponentially as statewide average SAT increases.
-As the percent of high school students who took the SAT increases, the state's average total score decreases exponentially. 
+There is a strong, negative relationship between the Takers variable and SAT(r=-.86). However, the Taker's variable appears to be decrease exponentially as statewide average SAT increases. As the percent of high school students who took the SAT increases, the state's average total score decreases roughly exponentially. 
 
-In contrast, there is a strong positive  relationship between Rank and SAT.  The state's average total SAT score increases as the median percentile rank of test-takers increases. 
+In contrast, there is a strong positive relationship between Rank and SAT (r=.88).  The state's average total SAT score increases as the median percentile rank of test-takers increases. 
 
 The relationship between rank and takers appears to be very strong (r=-.94) and negatively linear. When the percent of a state's high schoolers who take the SAT increases, the median percentile rank of test-takers decreases.  
 
-##CHECK for outliers##
-Rank does not appear to be linearly related to residual (r=1.3^-16). In fact, all of the variables have an apparent lack of linearity with residuals.  SAT has the highest correlation (.43) with resid.  This means that states with higher SAT scores tend to have a higher raw residual according to the model.
+The three states with the lowest SAT scores (South Carolina, Georgia and North Carolina) may be outliers.  #look into this more#
 
-The states with the lowest SAT scores (South Carolina, Georgia and North Carolina) appears as an outliers in 
 
 (b)
 ```{r}
@@ -61,10 +58,22 @@ b.sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
 
 plot(resid(b.sat.lm)~b.sat.lm$fitted.values)
 
-library(car)
-crPlots(b.sat.lm)
+#Cooks Distance#
+plot(b.sat.lm,which=c(4))
 
+#leverage#
+lev.b<-hat(model.matrix(b.sat.lm))
+
+plot(lev.b)
+
+library(car)
+cr.bplots<-crPlots(b.sat.lm)
+
+identify(cr.bplots)
 ```
+
+Iowa, South Carolina and COnnecticut have very high Cook's distance values. This indicates that these states may be heavily influencing the model. 
+
 
 (c)
 ```{r}
