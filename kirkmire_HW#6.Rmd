@@ -106,11 +106,11 @@ sd(rel.expend.years.income$Expend)
 ```
 The correlation coeficient of income vs residual (.135) suggests that there is a lack of linear relationship between these variables.  This suggests that median family income is not related to the residual.  However, Years and Expenditure  appear to have stronger positive linear relationships with the residuals albeit these are not very strong relationships  (.41 and .50 respectively).  
 
-Years is not stongly correlated with expenditure (r=.0598).  This means that the amount that a state spends per student is not correlated with how may years of formal study that sudents had in social sciences, natural sciences and humanities.
+Years is not stongly correlated with expenditure (r=.0598) or income (r=.135).  This means that both the amount that a state spends per student as well as median test taker family income are not correlated with how many years of formal study that sudents had in social sciences, natural sciences and humanities.
 
 There is an obvious outlier in terms of spending per student in secondary education (Expend).  Alaska spends over $5,000 per student per student. The mean and standard deviation of expenditure is $2,297 and $614, respectively. 
 
-There are also two states that are outlying in regard to median family income vs SAT score. These states (Alaska and Louisiana) also happen to be the highest states overall in terms of median family income of test-takers.
+There are also two states that are outlying in regard to median family income vs both years and expend. These states (Alaska and Louisiana) also happen to be the highest states overall in terms of median family income of test-takers.
 
 
 (f)
@@ -118,11 +118,56 @@ There are also two states that are outlying in regard to median family income vs
 
 #Fit model with log(Takers) model w Expend, Income and Years#
 
-logt.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank+sat$Expend+sat$Years)
+f.logt.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank+sat$Expend+sat$Years)
+
+plot(resid(f.logt.sat.lm)~f.logt.sat.lm$fitted.values)
+
+#Cooks Distance#
+plot(f.logt.sat.lm,which=c(4))
+
+#leverage#
+lev<-hat(model.matrix(f.logt.sat.lm))
+
+plot(lev)
+
+
+library(car)
+crPlots(f.logt.sat.lm)
+
+
 ```
+Alaska has the highest expenditure per student by a large amount.  Anecdotely, I have heard that much of the money spent on high school students in ALaska involves transporting them to various extracurricular events. Bringing teams together for athletic competitions may involve flying the entire basketball team to another location since the state is so vast and schools are often otherwise virtually inaccesible.
+
+This increase in state ependiture per student for travel cost will likely be of little use in a model for state SAT scores and will only serve to "pull" the least squares reggression line towards it since it has such a high leverage. Therefore it is justified to remove Alaska from the model.
 
 (g)
 ```{r}
+#fit w/o Alaska#
+sat.sansAK<-sat[!sat$State==('Alaska'),]
+
+sansAK.lm<-lm(sat.sansAK$SAT~log(sat.sansAK$Takers)+sat.sansAK$Rank+sat.sansAK$Expend+sat.sansAK$Years)
+
+#resid vs fitted plot#
+plot(resid(sansAK.lm)~sansAK.lm$fitted.values)
+
+#Cooks Distance#
+plot(sansAK.lm,which=c(4))
+
+#leverage#
+lev1<-hat(model.matrix(sansAK.lm))
+
+plot(lev1)
+
+
+library(car)
+crPlots(sansAK.lm)
+
+#Partial F-test#
+
+
+
+
+
 
 ```
 
@@ -135,6 +180,22 @@ logt.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank+sat$Expend+sat$Years)
 ```{r}
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
