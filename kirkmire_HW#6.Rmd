@@ -56,12 +56,11 @@ The three states with the lowest SAT scores (South Carolina, Georgia and North C
 ```{r}
 b.sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
 
-plot(resid(b.sat.lm)~b.sat.lm$fitted.values)
+#Resid vs Fitted#
+plot(b.sat.lm,which=c(1))
 
 #Cooks Distance#
 plot(b.sat.lm,which=c(4))
-
-
 
 #leverage#
 lev.b<-hat(model.matrix(b.sat.lm))
@@ -74,19 +73,34 @@ cr.bplots<-crPlots(b.sat.lm)
 
 identify(cr.bplots)
 ```
+The residuals vs fitted values plot reveals a lack of homoscedasticity in the residuals. There is a pattern in  which both lower and higher fitted values have high (positive) residuals and intermediate fitted values have lower (more negative) residuals.
 
-Iowa, South Carolina and COnnecticut have very high Cook's distance values. This indicates that these states may be heavily influencing the model. 
+
+Iowa, South Carolina and Connecticut have very high Cook's distance values. This indicates that these states may be heavily influencing the model. 
 
 
 (c)
 ```{r}
 log.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank)
 
-plot(resid(log.sat.lm)~log.sat.lm$fitted.values)
+#Resid vs Fitted#
+plot(log.sat.lm,which=c(1))
 
+
+#Cooks Distance#
+plot(log.sat.lm,which=c(4))
+
+#leverage#
+lev.c<-hat(model.matrix(log.sat.lm))
+
+plot(lev.c)
+
+#Component plus resid plots#
 library(car)
 crPlots(log.sat.lm)
 ```
+The homoscedasticity of the residuals is improved and the pattern described in part B is no longer evident. However, there is is still a very large negative residual that was also apparent in the first model that belongs to South Carolina. This state also appears in the plot of Cook's distance as having a great influence on the model.  There are two additional states that exhibit high Cook's distances, Mississippi and North Carolina.
+
 
 (d)
 ```{r}
@@ -132,7 +146,9 @@ There are also two states that are outlying in regard to median family income vs
 
 f.logt.sat.lm<-lm(SAT~log(Takers)+Rank+Expend+Years, data=sat)
 
-plot(resid(f.logt.sat.lm)~f.logt.sat.lm$fitted.values)
+
+#Resid vs Fitted#
+plot(f.logt.sat.lm,which=c(1))
 
 #Cooks Distance#
 plot(f.logt.sat.lm,which=c(4))
