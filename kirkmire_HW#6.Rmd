@@ -159,28 +159,40 @@ The large F-statistic provides strong evidence that at least one of the variable
 
 (h)
 ```{r}
-sansAK<-summary(sansAK.lm)
+sansAK.sum<-summary(sansAK.lm)
 
 #Confidence intervals for coefficients#
 
-#Expend#
-sansAK$coefficients[4]+c(-1,1)*sansAK$coefficients[4,2]*sansAK$coefficients[4,3]
-
-#Years#
-sansAK$coefficients[5]+c(-1,1)*sansAK$coefficients[5,2]*sansAK$coefficients[5,3]
-
-#Rank#
-sansAK$coefficients[6]+c(-1,1)*sansAK$coefficients[6,2]*sansAK$coefficients[6,3]
-
-
+confint(sansAK.lm,level=.95)
 
 ```
+
+(i)
+```{r}
+red.sat.lm<-lm(SAT~log(Takers)+Rank+Expend,data=sat.sansAK)
+
+woIncome.sum<-summary(red.sat.lm)
+
+#Expend CI#
+woIncome.sum$coefficients[4]+c(-1,1)*woIncome.sum$coefficients[4,2]*woIncome.sum$coefficients[4,3]
+
+```
+ans=given income vs not given income
+
 
 (j)
 ```{r}
+library(robustbase)
+
+
+robust.lm<-lmrob(SAT~log(Takers)+Rank+Expend+Years+Income, data=sat)
+
+confint(robust.lm,level=.95)
+
+robust.lm$rweights[29]
 
 ```
-
+A weight of zero was assigned to Alaska by the robust regression function.  The outlier therefore did not contribute to the robust regression model.
 
 
 
