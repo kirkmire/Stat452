@@ -118,7 +118,7 @@ There are also two states that are outlying in regard to median family income vs
 
 #Fit model with log(Takers) model w Expend, Income and Years#
 
-f.logt.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank+sat$Expend+sat$Years)
+f.logt.sat.lm<-lm(SAT~log(Takers)+Rank+Expend+Years, data=sat)
 
 plot(resid(f.logt.sat.lm)~f.logt.sat.lm$fitted.values)
 
@@ -145,34 +145,34 @@ This increase in state ependiture per student for travel cost will likely be of 
 #fit w/o Alaska#
 sat.sansAK<-sat[!sat$State==('Alaska'),]
 
-sansAK.lm<-lm(sat.sansAK$SAT~log(sat.sansAK$Takers)+sat.sansAK$Rank+sat.sansAK$Expend+sat.sansAK$Years)
+sansAK.lm<-lm(SAT~log(Takers)+Rank+Expend+Years+Income, data=sat.sansAK)
 
-#resid vs fitted plot#
-plot(resid(sansAK.lm)~sansAK.lm$fitted.values)
-
-#Cooks Distance#
-plot(sansAK.lm,which=c(4))
-
-#leverage#
-lev1<-hat(model.matrix(sansAK.lm))
-
-plot(lev1)
-
-
-library(car)
-crPlots(sansAK.lm)
+#Refitting model from Part D#
+logt.sansAK.lm<-lm(SAT~log(Takers)+Rank, data=sat.sansAK)
 
 #Partial F-test#
-
-
-
-
-
+anova(sansAK.lm,logt.sansAK.lm)
 
 ```
+The large F-statistic provides strong evidence that at least one of the variables added in the model that includes the three variables (Expend, Years, and Income) results in a statistically different model.
+
 
 (h)
 ```{r}
+sansAK<-summary(sansAK.lm)
+
+#Confidence intervals for coefficients#
+
+#Expend#
+sansAK$coefficients[4]+c(-1,1)*sansAK$coefficients[4,2]*sansAK$coefficients[4,3]
+
+#Years#
+sansAK$coefficients[5]+c(-1,1)*sansAK$coefficients[5,2]*sansAK$coefficients[5,3]
+
+#Rank#
+sansAK$coefficients[6]+c(-1,1)*sansAK$coefficients[6,2]*sansAK$coefficients[6,3]
+
+
 
 ```
 
