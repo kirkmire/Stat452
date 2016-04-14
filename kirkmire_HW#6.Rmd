@@ -61,11 +61,14 @@ plot(resid(b.sat.lm)~b.sat.lm$fitted.values)
 #Cooks Distance#
 plot(b.sat.lm,which=c(4))
 
+
+
 #leverage#
 lev.b<-hat(model.matrix(b.sat.lm))
 
 plot(lev.b)
 
+#Component plus resid plots#
 library(car)
 cr.bplots<-crPlots(b.sat.lm)
 
