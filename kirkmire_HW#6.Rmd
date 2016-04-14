@@ -51,6 +51,9 @@ In contrast, there is a strong positive  relationship between Rank and SAT.  The
 The relationship between rank and takers appears to be very strong (r=-.94) and negatively linear. When the percent of a state's high schoolers who take the SAT increases, the median percentile rank of test-takers decreases.  
 
 ##CHECK for outliers##
+Rank does not appear to be linearly related to residual (r=1.3^-16). In fact, all of the variables have an apparent lack of linearity with residuals.  SAT has the highest correlation (.43) with resid.  This means that states with higher SAT scores tend to have a higher raw residual according to the model.
+
+The states with the lowest SAT scores (South Carolina, Georgia and North Carolina) appears as an outliers in 
 
 (b)
 ```{r}
@@ -81,7 +84,7 @@ logt.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank)
 
 sat$resid<-(resid(logt.sat.lm))
 
-ordered.sat<-sat[order(logt.sat$resid),]
+ordered.sat<-sat[order(logt.sat.lm$resid),]
 
 ```
 South Carolina,North Carolina and Mississippi performed worst after adjusting for the number and quality of students taking the test.  The top performing states were New Hampshire, Iowa and Connecticut.
@@ -90,18 +93,32 @@ South Carolina,North Carolina and Mississippi performed worst after adjusting fo
 (e)
 ```{r}
 #Relationship between Expend, Years and Income#
-rel.expend.years.income<-sat[,c('SAT','Takers','Rank','resid')]
+rel.expend.years.income<-sat[,c('Years','Expend','Income','resid','State')]
 
 library(GGally)
-ggpairs(rel.expend.years.income)
+ggpairs(rel.expend.years.income[,1:4])
+
+mean(rel.expend.years.income$Expend)
+
+sd(rel.expend.years.income$Expend)
+
+
 ```
+The correlation coeficient of income vs residual (.135) suggests that there is a lack of linear relationship between these variables.  This suggests that median family income is not related to the residual.  However, Years and Expenditure  appear to have stronger positive linear relationships with the residuals albeit these are not very strong relationships  (.41 and .50 respectively).  
 
+Years is not stongly correlated with expenditure (r=.0598).  This means that the amount that a state spends per student is not correlated with how may years of formal study that sudents had in social sciences, natural sciences and humanities.
 
+There is an obvious outlier in terms of spending per student in secondary education (Expend).  Alaska spends over $5,000 per student per student. The mean and standard deviation of expenditure is $2,297 and $614, respectively. 
+
+There are also two states that are outlying in regard to median family income vs SAT score. These states (Alaska and Louisiana) also happen to be the highest states overall in terms of median family income of test-takers.
 
 
 (f)
 ```{r}
 
+#Fit model with log(Takers) model w Expend, Income and Years#
+
+logt.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank+sat$Expend+sat$Years)
 ```
 
 (g)
