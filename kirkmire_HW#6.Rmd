@@ -6,36 +6,10 @@ output: html_document
 ---
 
 
-```{r setup, include=FALSE}
- sat <- read.csv("C:/Users/Colin/Desktop/Rprojects/Stat452/sat.csv")
-
-sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
-
-#Check residuals#
-
-plot(resid(sat.lm)~predict(sat.lm))
-hist(resid(sat.lm),col="gray")
-qqnorm(resid(sat.lm))
-
-#Try log transformation#
-plot(sat$SAT~log(sat$Takers))
-plot(sat$SAT~(sat$Rank))
-
-sq.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank^2)
-
-
-#Re-Check residuals#
-
-plot(resid(sq.sat.lm)~predict(sq.sat.lm))
-hist(resid(sq.sat.lm),col="gray")
-qqnorm(resid(sq.sat.lm))
-
-
-summary(sat.lm)
-```
-
 (a)
 ```{r}
+sat <- read.csv("C:/Users/Colin/Desktop/Rprojects/Stat452/sat.csv")
+
 #Relationship between SAT,Takers and Ranks#
 rel.sat<-sat[,c('SAT','Takers','Rank')]
 
@@ -45,39 +19,44 @@ ggpairs(rel.sat)
 
 There is a strong, negative relationship between the Takers variable and SAT(r=-.86). However, the Taker's variable appears to be decrease exponentially as statewide average SAT increases. As the percent of high school students who took the SAT increases, the state's average total score decreases roughly exponentially. 
 
-In contrast, there is a strong positive relationship between Rank and SAT (r=.88).  The state's average total SAT score increases as the median percentile rank of test-takers increases. 
+In contrast, there is a strong positive linear relationship between Rank and SAT (r=.88).  The state's average total SAT score increases as the median percentile rank of test-takers increases. 
 
 The relationship between rank and takers appears to be very strong (r=-.94) and negatively linear. When the percent of a state's high schoolers who take the SAT increases, the median percentile rank of test-takers decreases.  
 
-The three states with the lowest SAT scores (South Carolina, Georgia and North Carolina) may be outliers.  #look into this more#
+The three states with the lowest SAT scores (South Carolina, Georgia and North Carolina) are apparent outliers in all plots of relationships that include SAT scores.
 
 
 (b)
 ```{r}
-b.sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
+sat.lm<-lm(sat$SAT~sat$Takers+sat$Rank)
 
 #Resid vs Fitted#
-plot(b.sat.lm,which=c(1))
+plot(sat.lm,which=c(1))
+
+#Normality of Residuals#
+hist(sat.lm$residuals)
 
 #Cooks Distance#
-plot(b.sat.lm,which=c(4))
+plot(sat.lm,which=c(4))
 
 #leverage#
-lev.b<-hat(model.matrix(b.sat.lm))
+lev<-hat(model.matrix(sat.lm))
 
-plot(lev.b)
+plot(lev)
 
 #Component plus resid plots#
 library(car)
-cr.bplots<-crPlots(b.sat.lm)
+cr.bplots<-crPlots(sat.lm)
 
 identify(cr.bplots)
 ```
 The residuals vs fitted values plot reveals a lack of homoscedasticity in the residuals. There is a pattern in  which both lower and higher fitted values have high (positive) residuals and intermediate fitted values have lower (more negative) residuals.
 
+The residuals display a lack of normality as they appear to be skewed moderately to the left in the histogram of residuals.
 
 Iowa, South Carolina and Connecticut have very high Cook's distance values. This indicates that these states may be heavily influencing the model. 
 
+The component plus residual plot of average SAT scores vs Takers reveals non-linearity.  This suggests that that the takers variable should be transformed.  This is consistant with the non-linear (negative exponential) relationship that was observed between SAT and Takers in part A.
 
 (c)
 ```{r}
