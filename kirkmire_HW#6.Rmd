@@ -50,7 +50,7 @@ cr.bplots<-crPlots(sat.lm)
 
 identify(cr.bplots)
 ```
-The residuals vs fitted values plot reveals a lack of homoscedasticity in the residuals. There is a pattern in  which both lower and higher fitted values have high (positive) residuals and intermediate fitted values have lower (more negative) residuals.
+The residuals vs fitted values plot reveals a lack of homoscedasticity. There is a pattern in  which both lower and higher fitted values have high (positive) residuals and intermediate fitted values have lower (more negative) residuals.
 
 The residuals display a lack of normality as they appear to be skewed moderately to the left in the histogram of residuals.
 
@@ -65,6 +65,8 @@ log.sat.lm<-lm(sat$SAT~log(sat$Takers)+sat$Rank)
 #Resid vs Fitted#
 plot(log.sat.lm,which=c(1))
 
+#Normality of Residuals#
+hist(log.sat.lm$residuals)
 
 #Cooks Distance#
 plot(log.sat.lm,which=c(4))
@@ -78,7 +80,17 @@ plot(lev.c)
 library(car)
 crPlots(log.sat.lm)
 ```
-The homoscedasticity of the residuals is improved and the pattern described in part B is no longer evident. However, there is is still a very large negative residual that was also apparent in the first model that belongs to South Carolina. This state also appears in the plot of Cook's distance as having a great influence on the model.  There are two additional states that exhibit high Cook's distances, Mississippi and North Carolina.
+The homoscedasticity of the residuals is improved and the pattern described in the residual vs fitted plot of part B is no longer evident. 
+
+The normality of the residuals is slightly improved but there is still a left skew due to several very large negative residuals.
+
+
+Two of these very large negative residuals were also apparent in the first model and belong to North Carolina and South Carolina. 
+
+
+These two states also appears in the plot of Cook's distance as having a great influence on the model.  Mississippi also exhibits a high Cook's distance.
+
+The nonlinearity that was apparent in the untransformed component plus residual plot of SAT vs takers has been corrected with the log transformation of takers.
 
 
 (d)
@@ -109,7 +121,7 @@ sd(rel.expend.years.income$Expend)
 
 
 ```
-The correlation coeficient of income vs residual (.135) suggests that there is a lack of linear relationship between these variables.  This suggests that median family income is not related to the residual.  However, Years and Expenditure  appear to have stronger positive linear relationships with the residuals albeit these are not very strong relationships  (.41 and .50 respectively).  
+The correlation coeficient of income vs residual (.135) demonstrates that there is a lack of linear relationship between these variables.  This suggests that median family income is not related to the residual.  However, Years and Expenditure  appear to have stronger positive linear relationships with the residuals albeit these are not very strong relationships  (.41 and .50 respectively).  
 
 Years is not stongly correlated with expenditure (r=.0598) or income (r=.135).  This means that both the amount that a state spends per student as well as median test taker family income are not correlated with how many years of formal study that sudents had in social sciences, natural sciences and humanities.
 
@@ -125,6 +137,11 @@ There are also two states that are outlying in regard to median family income vs
 
 f.logt.sat.lm<-lm(SAT~log(Takers)+Rank+Expend+Years, data=sat)
 
+#Resid vs Fitted#
+plot(f.logt.sat.lm,which=c(1))
+
+#Normality of Residuals#
+hist(f.logt.sat.lm$residuals)
 
 #Resid vs Fitted#
 plot(f.logt.sat.lm,which=c(1))
@@ -141,11 +158,23 @@ plot(lev)
 library(car)
 crPlots(f.logt.sat.lm)
 
-
 ```
-Alaska has the highest expenditure per student by a large amount.  Anecdotely, I have heard that much of the money spent on high school students in ALaska involves transporting them to various extracurricular events. Bringing teams together for athletic competitions may involve flying the entire basketball team to another location since the state is so vast and schools are often otherwise virtually inaccesible.
 
-This increase in state ependiture per student for travel cost will likely be of little use in a model for state SAT scores and will only serve to "pull" the least squares reggression line towards it since it has such a high leverage. Therefore it is justified to remove Alaska from the model.
+The variance of residuals appears constant accross fitted values. Although there are several large positive and negative residuals they are spread accross fitted values.
+
+The normality of the residuals is better than the previous normality but there remains a slight left skew due to a very large negative residual.
+
+
+Alaska has a Cook's distance that dwarfs that of the other states.  This indicates that Alaska is highly influencing the model.
+
+All compenent plus residual plots display acceptable linear relationships with the exception of the plot of the plot of component+resid(SAT) vs Expenditure. This nonlinear relationship can be attributed to a single high leverage point that represents a state that spends a much larger amount per high school student than the other states: Alaska.
+
+
+Alaska has the highest expenditure per student by a large amount.  Anecdotely, I have heard that much of the money spent on high school students in Alaska involves transporting them to various extracurricular events. Bringing teams together for athletic competitions may involve flying the entire basketball team to another location since the state is so vast and schools are often otherwise virtually inaccesible.
+
+The increase in money that other schools spend per student likely relates better to improved SAT scores because more funds are allocated towards textbooks, teachers, etc. 
+
+Alaska's high state ependiture per student due to travel cost will likely be of little use in a model for state SAT scores and will only serve to "pull" the multiple regression towards Alaska since it has such a high Cook's distance. Therefore, it is justified to remove Alaska from the model.
 
 (g)
 ```{r}
