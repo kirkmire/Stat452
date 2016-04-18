@@ -44,17 +44,21 @@ lev<-hat(model.matrix(sat.lm))
 
 plot(lev)
 
-#Component plus resid plots#
+#Added Variable Plots#
 library(car)
+a<-avPlots(sat.lm)
+a
+#Component plus resid plots#
 cr.bplots<-crPlots(sat.lm)
 
-identify(cr.bplots)
 ```
 The residuals vs fitted values plot reveals a lack of homoscedasticity. There is a pattern in  which both lower and higher fitted values have high (positive) residuals and intermediate fitted values have lower (more negative) residuals.
 
 The residuals display a lack of normality as they appear to be skewed moderately to the left in the histogram of residuals.
 
 Iowa, South Carolina and Connecticut have very high Cook's distance values. This indicates that these states may be heavily influencing the model. 
+
+The added variable plots do not reveal any high leverage points but there are several notable low outliers in both plots that are from the low SAT scores in states including South Carolina, North Carolina and Georgia.
 
 The component plus residual plot of average SAT scores vs Takers reveals non-linearity.  This suggests that that the takers variable should be transformed.  This is consistant with the non-linear (negative exponential) relationship that was observed between SAT and Takers in part A.
 
@@ -76,8 +80,11 @@ lev.c<-hat(model.matrix(log.sat.lm))
 
 plot(lev.c)
 
-#Component plus resid plots#
+#Added Variable Plots#
 library(car)
+avPlots(log.sat.lm)
+
+#Component plus resid plots#
 crPlots(log.sat.lm)
 ```
 The homoscedasticity of the residuals is improved and the pattern described in the residual vs fitted plot of part B is no longer evident. 
@@ -88,9 +95,11 @@ The normality of the residuals is slightly improved but there is still a left sk
 Two of these very large negative residuals were also apparent in the first model and belong to North Carolina and South Carolina. 
 
 
-These two states also appears in the plot of Cook's distance as having a great influence on the model.  Mississippi also exhibits a high Cook's distance.
+These two states also appear in the plot of Cook's distance as having a great influence on the model.  Mississippi also exhibits a high Cook's distance.
 
-The nonlinearity that was apparent in the untransformed component plus residual plot of SAT vs takers has been corrected with the log transformation of takers.
+The states that appeared in the untransformed added variable plots are still present as outliers in the new added variable plots.
+
+However, the nonlinearity observed in the untransformed component plus residual plot of SAT vs takers has been corrected with the log transformation of takers.
 
 
 (d)
@@ -202,6 +211,11 @@ sansAK.sum<-summary(sansAK.lm)
 confint(sansAK.lm,level=.95)
 
 ```
+
+Interpret cnfidence intervals
+
+
+
 
 (i)
 ```{r}
