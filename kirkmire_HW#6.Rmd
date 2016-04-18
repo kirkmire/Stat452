@@ -46,8 +46,8 @@ plot(lev)
 
 #Added Variable Plots#
 library(car)
-a<-avPlots(sat.lm)
-a
+avPlots(sat.lm)
+
 #Component plus resid plots#
 cr.bplots<-crPlots(sat.lm)
 
@@ -130,11 +130,11 @@ sd(rel.expend.years.income$Expend)
 
 
 ```
-The correlation coeficient of income vs residual (.135) demonstrates that there is a lack of linear relationship between these variables.  This suggests that median family income is not related to the residual.  However, Years and Expenditure  appear to have stronger positive linear relationships with the residuals albeit these are not very strong relationships  (.41 and .50 respectively).  
+The correlation coeficient of income vs residual (r=.135) demonstrates that there is a lack of linear relationship between these variables.  This suggests that median family income is not related to the residual.  However, Years and Expenditure  appear to have stronger positive linear relationships with the residuals albeit these are not very strong relationships  (r=.41 and r=.50 respectively).  
 
-Years is not stongly correlated with expenditure (r=.0598) or income (r=.135).  This means that both the amount that a state spends per student as well as median test taker family income are not correlated with how many years of formal study that sudents had in social sciences, natural sciences and humanities.
+Years is not stongly correlated with expenditure (r=.0598) or income (r=.135).  This means that both the amount that a state spends per student as well as median test taker family income are not well correlated with how many years of formal study that sudents had in social sciences, natural sciences and humanities.
 
-There is an obvious outlier in terms of spending per student in secondary education (Expend).  Alaska spends over $5,000 per student per student. The mean and standard deviation of expenditure is $2,297 and $614, respectively. 
+There is an obvious outlier in terms of spending per student in secondary education (Expend).  Alaska spends over $5,000 per secondary school student. The mean and standard deviation of expenditure is $2,297 and $614, respectively. 
 
 There are also two states that are outlying in regard to median family income vs both years and expend. These states (Alaska and Louisiana) also happen to be the highest states overall in terms of median family income of test-takers.
 
@@ -160,11 +160,13 @@ plot(f.logt.sat.lm,which=c(4))
 
 #leverage#
 lev<-hat(model.matrix(f.logt.sat.lm))
-
 plot(lev)
 
-
+#Added Variable Plots#
 library(car)
+b<-avPlots(f.logt.sat.lm)
+b
+#Component plus resid plots#
 crPlots(f.logt.sat.lm)
 
 ```
@@ -176,12 +178,15 @@ The normality of the residuals is better than the previous normality but there r
 
 Alaska has a Cook's distance that dwarfs that of the other states.  This indicates that Alaska is highly influencing the model.
 
+The added variable plots have no obvious high leverage points or outliers with the exception of the SAT vs expenditure av plot which shows that Alaska has a lot of leverage in the plot. The added variable plots reveals where Alaska's influence in the model is from.
+
+
 All compenent plus residual plots display acceptable linear relationships with the exception of the plot of the plot of component+resid(SAT) vs Expenditure. This nonlinear relationship can be attributed to a single high leverage point that represents a state that spends a much larger amount per high school student than the other states: Alaska.
 
 
 Alaska has the highest expenditure per student by a large amount.  Anecdotely, I have heard that much of the money spent on high school students in Alaska involves transporting them to various extracurricular events. Bringing teams together for athletic competitions may involve flying the entire basketball team to another location since the state is so vast and schools are often otherwise virtually inaccesible.
 
-The increase in money that other schools spend per student likely relates better to improved SAT scores because more funds are allocated towards textbooks, teachers, etc. 
+The increase in money that the other states spend per student likely relates better to improved SAT scores because more funds are allocated towards textbooks, teachers, etc. 
 
 Alaska's high state ependiture per student due to travel cost will likely be of little use in a model for state SAT scores and will only serve to "pull" the multiple regression towards Alaska since it has such a high Cook's distance. Therefore, it is justified to remove Alaska from the model.
 
@@ -212,10 +217,20 @@ confint(sansAK.lm,level=.95)
 
 ```
 
-Interpret cnfidence intervals
+Takers: 
+We are 95% confident that the average state SAT score decreases between -3.39 and -58.91 for every log of the percent of high school student in the state who took the SAT given the other predictor variables included in the model are held constant.
 
+Rank:
+Given all other predictors included are held constant, we are 95% confident that the average state SAT score increases between 1.01 and 9.11 points for every unit increase in the median percentile rank of the test-takers within their schools.
 
+Expend:
+We are 95% confident that for every hundred dollar increase in per studen expenditure, the average SAT increases by between 2.31 and 5.43 points (given all other predictor variables constant).
 
+Years:
+We are 95% confident that the state average SAT score increases between 2.43 and 24.56 points for ever additional average number of years that test takers had in social sciences, natural sciences and humanities (given all other predictor variables constant).
+
+Income:
+We are 95% confident that the state average SAT score increases between -.11 and .34 points for every additional hundred dollars in median family income (given all other predictor variables constant)
 
 (i)
 ```{r}
