@@ -164,8 +164,8 @@ plot(lev)
 
 #Added Variable Plots#
 library(car)
-b<-avPlots(f.logt.sat.lm)
-b
+avPlots(f.logt.sat.lm)
+
 #Component plus resid plots#
 crPlots(f.logt.sat.lm)
 
@@ -218,7 +218,7 @@ confint(sansAK.lm,level=.95)
 ```
 
 Takers: 
-We are 95% confident that the average state SAT score decreases between -3.39 and -58.91 for every log of the percent of high school student in the state who took the SAT given the other predictor variables included in the model are held constant.
+We are 95% confident that a one percent increase in the percent of high school students in the state who took the SAT is associated with a decrease in state average SAT score between .034 and .586 given the other predictor variables included in the model are held constant.
 
 Rank:
 Given all other predictors included are held constant, we are 95% confident that the average state SAT score increases between 1.01 and 9.11 points for every unit increase in the median percentile rank of the test-takers within their schools.
