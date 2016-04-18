@@ -230,7 +230,7 @@ Years:
 We are 95% confident that the state average SAT score increases between 2.43 and 24.56 points for ever additional average number of years that test takers had in social sciences, natural sciences and humanities (given all other predictor variables constant).
 
 Income:
-We are 95% confident that the state average SAT score increases between -.11 and .34 points for every additional hundred dollars in median family income (given all other predictor variables constant)
+We are 95% confident that the state average SAT score increases between -.11 and .34 points for every additional hundred dollars in median family income (given all other predictor variables constant).  The increase in median family income may have a negative, zero, or positive difference in state average SAT score given all other predictor variables are held constant.
 
 (i)
 ```{r}
@@ -238,11 +238,13 @@ red.sat.lm<-lm(SAT~log(Takers)+Rank+Expend,data=sat.sansAK)
 
 woIncome.sum<-summary(red.sat.lm)
 
-#Expend CI#
-woIncome.sum$coefficients[4]+c(-1,1)*woIncome.sum$coefficients[4,2]*woIncome.sum$coefficients[4,3]
+#CI for Coefficients#
+confint(red.sat.lm,level=.95)
 
 ```
-ans=given income vs not given income
+The coeffient of expenditure in the reduced model no longer can be interpreted as the increase in state average SAT score given rank, takers, years and income are held constant. Rather, the coefficient of expenditure only reflects the estimated increase in state average SAT score given takers, rank and expenditure are held constant. The coefficient of expenditure became larger because it absorbed some of the variability in state average SAT score that was previously attributed to median family income.
+
+
 
 
 (j)
@@ -253,10 +255,15 @@ library(robustbase)
 robust.lm<-lmrob(SAT~log(Takers)+Rank+Expend+Years+Income, data=sat)
 
 confint(robust.lm,level=.95)
+confint(sansAK.lm)
+
 
 robust.lm$rweights[29]
 
 ```
+The confidence intervals of coefficients between the two methods of mlr are quite similar.  However, it was striking how much narrower the CI for the intercept was for the robust regression. The robust.lm log(takers) CI was also narrower than that of the initial model.  Interstingly, all of the remaining variables (Rank, Expend, years, income) had intial model 95% CI that could fit within those of their robust.lm counterparts.
+
+
 A weight of zero was assigned to Alaska by the robust regression function.  The outlier therefore did not contribute to the robust regression model.
 
 
