@@ -13,12 +13,106 @@ A partial picture of the data set information is shown below,
 #Relationship between Pairs#
 state.x77
 
-rel.state<-state.x77
+rel.state<-data.frame(state.x77)
 
 colnames(rel.state)<-c('Population','Income','Illiteracy',"LifeExp","Murder","HSGrad","Frost","Area")
 
 library(GGally)
 ggpairs(rel.state)
+
+#Fit Full Model#
+full.lm<-lm(LifeExp~Population+Income+Illiteracy+Murder+HSGrad+Frost+Area, data=rel.state)
+
+#Summary#
+summary(full.lm)
+
+#Resid vs Fitted#
+plot(full.lm,which=c(1))
+
+#Normality of Residuals#
+hist(full.lm$residuals)
+
+#Cooks Distance#
+plot(full.lm,which=c(4))
+
+#leverage#
+lev<-hat(model.matrix(full.lm))
+
+plot(lev)
+
+#Added Variable Plots#
+library(car)
+avPlots(full.lm)
+
+#Component plus resid plots#
+cr.bplots<-crPlots(full.lm)
+
+model.1 <- update(full.lm, . ~ . - Area)
+summary(model.1)
+model.2<- update(model.1, . ~ . - Illiteracy)
+summary(model.2)
+model.3<- update(model.2, . ~ . - Income)
+summary(model.3)
+model.4<- update(model.3, . ~ . - Population)
+summary(model.4)
+model.5<- update(model.4, . ~ . - Frost)
+summary(model.5)
+
+rsquare <- c(.7362, .7361, .7361, .7360, .7127, .6628)
+rsquare.adj<- c(.6922, .6993, .7061, .7126, .6939, .6485)
+
+n <- 50 # number of states (observational units) in data set
+aic.full <- extractAIC(full.lm)
+aic.full
+bic.full <- extractAIC(full.lm, k=log(n))
+bic.full
+aic.1 <- extractAIC(model.1)
+bic.1 <- extractAIC(model.1, k=log(n))
+aic.2 <- extractAIC(model.2)
+bic.2 <- extractAIC(model.2, k=log(n))
+aic.3 <- extractAIC(model.3)
+bic.3 <- extractAIC(model.3, k=log(n))
+aic.4 <- extractAIC(model.4)
+bic.4 <- extractAIC(model.4, k=log(n))
+aic.5 <- extractAIC(model.5)
+bic.5 <- extractAIC(model.5, k=log(n))
+
+vec.aic <- c(aic.full[2], aic.1[2], aic.2[2], aic.3[2], aic.4[2],
+aic.5[2])
+vec.bic <- c(bic.full[2], bic.1[2], bic.2[2], bic.3[2], bic.4[2],
+bic.5[2])
+
+library(DAAG)
+press.full <- press(model.full)
+press.full
+press.1 <- press(model.1)
+press.2 <- press(model.2)
+press.3 <- press(model.3)
+press.4 <- press(model.4)
+press.5 <- press(model.5)
+vec.press <- c(press.full, press.1, press.2, press.3, press.4,
+press.5)
+
+library(cvTools)
+cv.full <- repCV(model.full, K=10, R=20, seed=723)
+cv.1 <- repCV(model.1, K=10, R=20, seed=723)
+cv.2 <- repCV(model.2, K=10, R=20, seed=723)
+cv.3 <- repCV(model.3, K=10, R=20, seed=723)
+cv.4 <- repCV(model.4, K=10, R=20, seed=723)
+cv.5 <- repCV(model.5, K=10, R=20, seed=723)
+cv.full; cv.1; cv.2; cv.3; cv.4; cv.5
+
+cv.vec <- c(30.45817, 29.46631, 28.13321, 28.45137, 30.13718,
+31.93976)
+
+vec.model <- c("full.model", "model.1", "model.2", "model.3",
+"model.4", "model.5")
+vec.title <- c("model", "R^2", "R^2adj", "AIC", "BIC", "PRESS", "CV")
+table1 <- cbind(vec.model, rsquare, rsquare.adj, vec.aic, vec.bic,
+vec.press, cv.vec)
+table.final <-rbind(vec.title, table1)
+table.final
+
 
 
 ```
