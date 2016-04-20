@@ -1,0 +1,25 @@
+---
+title: "KirkmireLab#10"
+author: "Colin Kirkmire"
+date: "April 20, 2016"
+output: word_document
+---
+
+Homework[1]: In the basic data sets of R is the data set called state.x77 . Find an
+optimum reduced model, using life expectancy (Life Ex) as response variable.
+A partial picture of the data set information is shown below,
+
+```{r}
+#Relationship between Pairs#
+state.x77
+
+rel.state<-state.x77
+
+colnames(rel.state)<-c('Population','Income','Illiteracy',"LifeExp","Murder","HSGrad","Frost","Area")
+
+library(GGally)
+ggpairs(rel.state)
+
+
+```
+
