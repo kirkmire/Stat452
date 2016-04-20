@@ -21,7 +21,7 @@ library(GGally)
 ggpairs(rel.state)
 
 #Fit Full Model#
-full.lm<-lm(LifeExp~Population+Income+Illiteracy+Murder+HSGrad+Frost+Area, data=rel.state)
+full.lm<-lm(LifeExp~., data=rel.state)
 
 #Summary#
 summary(full.lm)
