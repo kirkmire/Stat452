@@ -119,3 +119,8 @@ The bivariate plot revealed no relationships that suggested an improvement in li
 
 Looking at the diagnostic plots for the full model raised little alarm as the homoscedasticity and normality of residuals appeared acceptable.  Alaska has a notably high Cook's distance, however it is not clear from the added variable plots what exactly about Alaska is making it stand out so there is little rationale for removing it from the model.
 
+Looking at abreviated versions of the model through several different criteria (see above model) suggests that several predictor variables can be removed without greatly diminishing the explanatory power of the model.  R-squared and adjusted R-squared remain above or near .70 for nearly all versions of the model.  However, after model 4 (the removal of frost) the R-squared drops significantly suggesting that this variable was contributing to the model.  
+
+THe fourth iteration of the model is what I would consider the "optimum model".  It has a nearly equivalent R-squared and R-squaed adj to the previous model but it is more parsimonious because it removes population, a variable that does not have a very negative correlation to LifeExp anyway.
+
+As further evidenc, the BIC approximates that of the previous model although model 4 is not itself the lowest (the same can be noted in the AIC comparison). The cross-validation results in fact improve in model 4 compared to model 3, which suggests that they are very close in explanatory power.  Since many of the metrics are so similar between model 3 and model 4, I am in favor of the more parsimonious model.
