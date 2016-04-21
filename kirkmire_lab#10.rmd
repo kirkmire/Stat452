@@ -83,18 +83,17 @@ vec.bic <- c(bic.full[2], bic.1[2], bic.2[2], bic.3[2], bic.4[2],
 bic.5[2])
 
 library(DAAG)
-press.full <- press(model.full)
+press.full <- press(full.lm)
 press.full
 press.1 <- press(model.1)
 press.2 <- press(model.2)
 press.3 <- press(model.3)
 press.4 <- press(model.4)
 press.5 <- press(model.5)
-vec.press <- c(press.full, press.1, press.2, press.3, press.4,
-press.5)
+vec.press <- c(press.full, press.1, press.2, press.3, press.4,press.5)
 
 library(cvTools)
-cv.full <- repCV(model.full, K=10, R=20, seed=723)
+cv.full <- repCV(full.lm, K=10, R=20, seed=723)
 cv.1 <- repCV(model.1, K=10, R=20, seed=723)
 cv.2 <- repCV(model.2, K=10, R=20, seed=723)
 cv.3 <- repCV(model.3, K=10, R=20, seed=723)
@@ -102,8 +101,7 @@ cv.4 <- repCV(model.4, K=10, R=20, seed=723)
 cv.5 <- repCV(model.5, K=10, R=20, seed=723)
 cv.full; cv.1; cv.2; cv.3; cv.4; cv.5
 
-cv.vec <- c(30.45817, 29.46631, 28.13321, 28.45137, 30.13718,
-31.93976)
+cv.vec <- c(91.96, 82.09, 79.591, 77.19, 79.21,83.63)
 
 vec.model <- c("full.model", "model.1", "model.2", "model.3",
 "model.4", "model.5")
@@ -116,4 +114,8 @@ table.final
 
 
 ```
+
+The bivariate plot revealed no relationships that suggested an improvement in linearity through transformation (all appear correlations appear linear or nonexistant).  Form here, fitting a full model and looking at the summary revealed that there were several predictor variables that were not contributing to the model (low p-value and/or near zero coefficient). 
+
+Looking at the diagnostic plots for the full model raised little alarm as the homoscedasticity and normality of residuals appeared acceptable.  Alaska has a notably high Cook's distance, however it is not clear from the added variable plots what exactly about Alaska is making it stand out so there is little rationale for removing it from the model.
 
