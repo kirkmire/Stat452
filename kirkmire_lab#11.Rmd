@@ -1,0 +1,21 @@
+---
+title: "Lab11"
+author: "Colin Kirkmire"
+date: "April 24, 2016"
+output: word_document
+---
+
+
+Homework [1]: The gestation data set (described below has factors related to 96 mammal species, their dimensions, and birthing times. This data set is in the Sleuth3 package, listed as case0902. II made some descriptives of the information and found that transforming all variables to natural logs helped in modeling. Use the information provided below and generate your best model of this information, using the various multiregression techniques you have learned. Present about a 50 to 100 word defense of your resulting best model. We want brainweight (or more properly log(brainweight)) as our response variable, and include any interaction terms you feel might be important for your finished model.
+
+```{r}
+library(Sleuth3)
+
+animals<-as.data.frame(case0902)
+
+
+brain.lm<-lm(log(Brain)~animals$Body+animals$Gestation+animals$Litter,data=animals)
+
+summary(brain.lm)
+```
+
