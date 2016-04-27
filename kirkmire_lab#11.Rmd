@@ -13,9 +13,98 @@ library(Sleuth3)
 
 animals<-as.data.frame(case0902)
 
+#Pairs Plots#
+library(GGally)
+plot(log(animals$Brain)~animals$Body)
+plot(log(animals$Brain)~animals$Gestation)
+plot(log(animals$Brain)~animals$Litter)
+plot(animals$Body~animals$Gestation)
+plot(animals$Body~animals$Litter)
+```
 
-brain.lm<-lm(log(Brain)~animals$Body+animals$Gestation+animals$Litter,data=animals)
+It appears as thought the linearity of the relationship between log(brain) and body weight could be improved by a log transformation of body weight.
+
+
+
+```{r}
+#pairwise comparison of log(brain) and log(body)#
+plot(log(animals$Brain)~log(animals$Body))
+
+
+#Full Model#
+brain.lm<-lm(log(Brain)~log(animals$Body)+animals$Gestation+animals$Litter,data=animals)
+
 
 summary(brain.lm)
+
+#Checking MLR assumptions#
+
+#Resid vs Fitted#
+plot(brain.lm,which=c(1))
+
+#Normality of Residuals#
+hist(brain.lm$residuals)
+
+#Cooks Distance#
+plot(brain.lm,which=c(4))
+
+#leverage#
+lev<-hat(model.matrix(brain.lm))
+
+plot(lev)
+
+#Added Variable Plots#
+library(car)
+avPlots(brain.lm)
+
+
+#Leaps Function#
+
+#log transforming data so that leaps is working with suitable predictor variables#
+
+animals$log.brain<-log(animals$Brain)
+animals$log.body<-log(animals$Body)
+
+
+library(leaps)
+
+leaps(x=animals[,4:6],y=animals[,7],names=names(animals)[4:6],int=T,method="Cp")
+
 ```
+
+The model with the lowest Cp statistic (4.0) is the one that includes all three predictor variables. However, the more parsimonious fourth model also has a low Cp statistic (6.7) which includes only Body and Gestation predictors. The following analysis will examine these two models.
+
+```{r}
+#Checking MLR Assumptions of 4th Model#
+
+#Fit model with only Body and Gestation#
+brain2.lm<-lm(log(Brain)~log(animals$Body)+animals$Gestation,data=animals)
+
+summary(brain2.lm)
+
+#Resid vs Fitted#
+plot(brain2.lm,which=c(1))
+
+#Normality of Residuals#
+hist(brain2.lm$residuals)
+
+#Cooks Distance#
+plot(brain2.lm,which=c(4))
+
+#leverage#
+lev<-hat(model.matrix(brain2.lm))
+
+plot(lev)
+
+#Added Variable Plots#
+library(car)
+avPlots(brain2.lm)
+
+
+```
+
+The 4th model appears to satisfy the assumptions of MLR just as well as the full model.  The two predictors in the 4th model: log(body) and Gestation account for 93.8% of the variation in log(brain).  The full model has an R^2 of 94.9 which is not very much additional explanatory power. I would put the 4th model forward as the best model because it satisfies MLR assumptions and requires on less variable while retaining a very high R^2.  
+
+
+
 
