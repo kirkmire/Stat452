@@ -51,11 +51,11 @@ tf <- function(x) {
    return(result)
 }
 
-mew.B1<-(BAF*(sum(tf(B_1))))
-mew.B2<-(BAF*(sum(tf(B_2))))
-mew.B3<-(BAF*(sum(tf(B_3))))
-mew.B4<-(BAF*(sum(tf(B_4))))
-mew.B5<-(BAF*(sum(tf(B_5))))
+T.B1<-60*(BAF*(sum(tf(B_1))))
+T.B2<-60*(BAF*(sum(tf(B_2))))
+T.B3<-60*(BAF*(sum(tf(B_3))))
+T.B4<-60*(BAF*(sum(tf(B_4))))
+T.B5<-60*(BAF*(sum(tf(B_5))))
     
 est.tpHA_B<-((sum(mew.B1,mew.B2,mew.B3,mew.B4,mew.B5))/5)*.7
 
@@ -165,11 +165,6 @@ plot.level.ave.diam<-function(x) {
 plot.level.ave.diam(B_1)
 
 
-ad.B1<-(BAF*(sum(mean(B_1))))
-ad.B2<-(BAF*(sum(avediam(B_2))))
-ad.B3<-(BAF*(sum(avediam(B_3))))
-ad.B4<-(BAF*(mean(avediam(B_4))))
-ad.B5<-(BAF*(mean(avediam(B_5))))
 
 
 ave.diam.B<-200*(sqrt((bpHA.B/est.tpHA_B)/3.14))
