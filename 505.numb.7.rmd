@@ -154,19 +154,25 @@ average_diameter_A<-mean(A_trees)
 
 #Average diameter in stratum B#
 
-avediam <- function(x) {
-   result<-x/(((((x)/100)/2)^2)*3.14)
+mean(B_1)
+
+plot.level.ave.diam<-function(x) {
+   result<-(BAF*sum(x/(((x)/200)^2)*3.14))/length(x)
    return(result)
 }
 
 
-ad.B1<-(BAF*(sum(avediam(B_1))))
+plot.level.ave.diam(B_1)
+
+
+ad.B1<-(BAF*(sum(mean(B_1))))
 ad.B2<-(BAF*(sum(avediam(B_2))))
 ad.B3<-(BAF*(sum(avediam(B_3))))
-ad.B4<-(BAF*(sum(avediam(B_4))))
-ad.B5<-(BAF*(sum(avediam(B_5))))
+ad.B4<-(BAF*(mean(avediam(B_4))))
+ad.B5<-(BAF*(mean(avediam(B_5))))
 
 
+ave.diam.B<-200*(sqrt((bpHA.B/est.tpHA_B)/3.14))
 ```
 
 
