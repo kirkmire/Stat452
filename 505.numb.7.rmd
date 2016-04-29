@@ -98,16 +98,56 @@ var_estBA<-var(estimatesBA)
 
 SE_BA<-sqrt(var_estBA/1)
 
-#90 CI for number of  tpHA#
+#90 CI for bapHA#
 
 mean(estimatesBA) + c(-1,1)* SE_BA * qt(p=.80,df=1)
 
 ```
 
-(6)
+(6) Estimate the total ba in trees larger than 10cm, DBH as well as its standard error.
 ```{r}
+#BA>10cm for strata A#
+large_A_trees<-A_trees[A_trees>10]
+
+bamsq <- function(x) {
+   result<-((((x)/100)/2)^2)*3.14
+   return(result)
+}
+
+bpHA_A_large<-(sum(bamsq(large_A_trees))/(4*25))*10000*.3
+
+large_B_trees<-B_trees[B_trees>10]
+
+bpHA_B_large<-(BAF*length(large_B_trees)/5)*.7
+
+estimatesBA_large<-c(bpHA_A_large,bpHA_B_large)
+
+var_estBA_large<-var(estimatesBA_large)
+
+
+SE_BA_large<-sqrt(var_estBA_large/1)
+
+#90 CI for BA in trees >10cm#
+
+mean(estimatesBA_large) + c(-1,1)* SE_BA_large * qt(p=.80,df=1)
 
 ```
+
+
+(7) Estimate the average diameter of trees in stratum A and, seperately, of trees in stratum B.
+
+
+No, you can not use the same estimators for each stratum because stratum B trees were selected using an unequal probability sampling method (variable radius plots) in which the larger trees were selected with a preference.
+
+```{r}
+#Average diameter in stratum A#
+
+average_diameter_A<-mean(A_trees)
+
+#Average diameter in stratum B#
+```
+
+
 
 
 
