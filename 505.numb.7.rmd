@@ -47,9 +47,17 @@ est_tpHA_A<-(tpms_avg*10000)*.3
 BAF<-4
 
 tf <- function(x) {
-   result<-BAF/((3.14*(x/100)/2)^2)
+   result<-1/(3.14*((x/100)/2)^2)
    return(result)
 }
+
+mew.B1<-(BAF*(sum(tf(B_1))))
+mew.B2<-(BAF*(sum(tf(B_2))))
+mew.B3<-(BAF*(sum(tf(B_3))))
+mew.B4<-(BAF*(sum(tf(B_4))))
+mew.B5<-(BAF*(sum(tf(B_5))))
+    
+est.tpHA_B<-((sum(mew.B1,mew.B2,mew.B3,mew.B4,mew.B5))/5)*.7
 
 B_trees<-c(18.9,14.5,12.9,14.2,9.9,11.2,21.3,14.2,15.3,8.2,7.6,10.3,17.4,19.2,3.4,13.5,19.5,18.5,14.6)
 
@@ -66,11 +74,11 @@ estimates<-c(est_tpHA_A,est.tpHA_B)
 var.est<-var(estimates)
 
 
-SE<-sqrt(var.est/1)
+SE4<-sqrt(var.est/2)
 
 #90 CI for number of  tpHA#
 
-mean(estimates) + c(-1,1)* SE * qt(p=.80,df=1)
+mean(estimates) + c(-1,1)* SE4 * qt(p=.95,df=1)
 
 ```
 
@@ -87,7 +95,7 @@ bamsq <- function(x) {
 
 bpHA.A<-(sum(bamsq(A_trees))/(4*25))*10000*.3
 
-
+#Estimate from Strata B#
 bpHA.B<-(BAF*length(B_trees)/5)*.7
 
 
@@ -96,11 +104,11 @@ estimatesBA<-c(bpHA.A,bpHA.B)
 var_estBA<-var(estimatesBA)
 
 
-SE_BA<-sqrt(var_estBA/1)
+SE_BA<-sqrt(var_estBA/2)
 
 #90 CI for bapHA#
 
-mean(estimatesBA) + c(-1,1)* SE_BA * qt(p=.80,df=1)
+mean(estimatesBA) + c(-1,1)* SE_BA * qt(p=.95,df=1)
 
 ```
 
@@ -125,11 +133,11 @@ estimatesBA_large<-c(bpHA_A_large,bpHA_B_large)
 var_estBA_large<-var(estimatesBA_large)
 
 
-SE_BA_large<-sqrt(var_estBA_large/1)
+SE_BA_large<-sqrt(var_estBA_large/2)
 
 #90 CI for BA in trees >10cm#
 
-mean(estimatesBA_large) + c(-1,1)* SE_BA_large * qt(p=.80,df=1)
+mean(estimatesBA_large) + c(-1,1)* SE_BA_large * qt(p=.95,df=1)
 
 ```
 
@@ -145,6 +153,20 @@ No, you can not use the same estimators for each stratum because stratum B trees
 average_diameter_A<-mean(A_trees)
 
 #Average diameter in stratum B#
+
+avediam <- function(x) {
+   result<-x/(((((x)/100)/2)^2)*3.14)
+   return(result)
+}
+
+
+ad.B1<-(BAF*(sum(avediam(B_1))))
+ad.B2<-(BAF*(sum(avediam(B_2))))
+ad.B3<-(BAF*(sum(avediam(B_3))))
+ad.B4<-(BAF*(sum(avediam(B_4))))
+ad.B5<-(BAF*(sum(avediam(B_5))))
+
+
 ```
 
 
