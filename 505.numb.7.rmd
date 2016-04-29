@@ -70,13 +70,44 @@ SE<-sqrt(var.est/1)
 
 #90 CI for number of  tpHA#
 
-
-
+mean(estimates) + c(-1,1)* SE * qt(p=.80,df=1)
 
 ```
 
+(5) 90% CI for baHA
+
+```{r}
+#Estimate from Strata A#
+A_trees<-c(10.3,10.3,11.2,13.6,11.2,8.5,9.4,6.8,0,9.8,8.9,12.2,5.6,3.4)
+
+bamsq <- function(x) {
+   result<-((((x)/100)/2)^2)*3.14
+   return(result)
+}
+
+bpHA.A<-(sum(bamsq(A_trees))/(4*25))*10000*.3
 
 
+bpHA.B<-(BAF*length(B_trees)/5)*.7
+
+
+estimatesBA<-c(bpHA.A,bpHA.B)
+
+var_estBA<-var(estimatesBA)
+
+
+SE_BA<-sqrt(var_estBA/1)
+
+#90 CI for number of  tpHA#
+
+mean(estimatesBA) + c(-1,1)* SE_BA * qt(p=.80,df=1)
+
+```
+
+(6)
+```{r}
+
+```
 
 
 
