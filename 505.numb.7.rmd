@@ -29,15 +29,17 @@ tpmsq <- function(x) {
    return(result)
 }
 
-tpmsq_A1<-tpmsq(A_1)
-tpmsq_A2<-tpmsq(A_2)
-tpmsq_A3<-c(0)
-tpmsq_A4<-tpmsq(A_4)
+t_A1<-18*tpmsq(A_1)*10000
+t_A2<-18*tpmsq(A_2)*10000
+t_A3<-18*c(0)
+t_A4<-18*tpmsq(A_4)*10000
 
-tpms_avg<-(tpmsq_A1+tpmsq_A2+tpmsq_A3+tpmsq_A4)/4
+all.plots_A<-c(t_A1,t_A2,t_A3,t_A4)
+  
+est.t_A<-(t_A1+t_A2+t_A3+t_A4)/4
 
+var.t_A<-(1/4)*(var(all.plots_A))
 
-est_tpHA_A<-(tpms_avg*10000)*.3
 ```
 
 ```{r}
@@ -51,19 +53,19 @@ tf <- function(x) {
    return(result)
 }
 
-T.B1<-60*(BAF*(sum(tf(B_1))))
-T.B2<-60*(BAF*(sum(tf(B_2))))
-T.B3<-60*(BAF*(sum(tf(B_3))))
-T.B4<-60*(BAF*(sum(tf(B_4))))
-T.B5<-60*(BAF*(sum(tf(B_5))))
+T.B1<-42*(BAF*(sum(tf(B_1))))
+T.B2<-42*(BAF*(sum(tf(B_2))))
+T.B3<-42*(BAF*(sum(tf(B_3))))
+T.B4<-42*(BAF*(sum(tf(B_4))))
+T.B5<-42*(BAF*(sum(tf(B_5))))
     
-est.tpHA_B<-((sum(mew.B1,mew.B2,mew.B3,mew.B4,mew.B5))/5)*.7
 
-B_trees<-c(18.9,14.5,12.9,14.2,9.9,11.2,21.3,14.2,15.3,8.2,7.6,10.3,17.4,19.2,3.4,13.5,19.5,18.5,14.6)
 
-tf.Btrees<-tf(B_trees)
+all.plots_B<-c(T.B1,T.B2,T.B3,T.B4,T.B5)
+  
+est.t_B<-mean(all.plots_B)
 
-est.tpHA_B<-(sum(tf.Btrees)/5)*.7
+var.t_B<-(1/5)*(var(all.plots_B))
 
 ```
 
