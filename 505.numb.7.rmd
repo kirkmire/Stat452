@@ -24,21 +24,21 @@ B_5<-c(3.4,13.5,19.5,18.5,14.6)
 
 ```{r}
 #Estimate from Strata A#
-tpmsq <- function(x) {
-   result<-length(x)/25
+total_tree_function <- function(x) {
+   result<-18*10000*(length(x)/25)
    return(result)
 }
 
-t_A1<-18*tpmsq(A_1)*10000
-t_A2<-18*tpmsq(A_2)*10000
-t_A3<-18*c(0)
-t_A4<-18*tpmsq(A_4)*10000
+t_hat_A1<-total_tree_function(A_1)
+t_hat_A2<-total_tree_function(A_2)
+t_hat_A3<-total_tree_function(A_3)
+t_hat_A4<-total_tree_function(A_4)
 
-all.plots_A<-c(t_A1,t_A2,t_A3,t_A4)
+all_plots_A<-c(t_hat_A1,t_hat_A2,t_hat_A3,t_hat_A4)
   
-est.t_A<-(t_A1+t_A2+t_A3+t_A4)/4
+est_tree_total_A<-mean(all_plots_A)
 
-var.t_A<-(1/4)*(var(all.plots_A))
+var_tree_total_A<-(1/4)*(var(all_plots_A))
 
 ```
 
@@ -53,34 +53,33 @@ tf <- function(x) {
    return(result)
 }
 
-T.B1<-42*(BAF*(sum(tf(B_1))))
-T.B2<-42*(BAF*(sum(tf(B_2))))
-T.B3<-42*(BAF*(sum(tf(B_3))))
-T.B4<-42*(BAF*(sum(tf(B_4))))
-T.B5<-42*(BAF*(sum(tf(B_5))))
+t_hat_B1<-42*(BAF*(sum(tf(B_1))))
+t_hat_B2<-42*(BAF*(sum(tf(B_2))))
+t_hat_B3<-42*(BAF*(sum(tf(B_3))))
+t_hat_B4<-42*(BAF*(sum(tf(B_4))))
+t_hat_B5<-42*(BAF*(sum(tf(B_5))))
     
 
 
-all.plots_B<-c(T.B1,T.B2,T.B3,T.B4,T.B5)
+all_plots_B<-c(t_hat_B1,t_hat_B2,t_hat_B3,t_hat_B4,t_hat_B5)
   
-est.t_B<-mean(all.plots_B)
+est_tree_total_B<-mean(all_plots_B)
 
-var.t_B<-(1/5)*(var(all.plots_B))
+var_tree_total_B<-(1/5)*(var(all_plots_B))
 
 ```
 
 
 ```{r}
-estimates<-c(est_tpHA_A,est.tpHA_B)
-
-var.est<-var(estimates)
+tpha_estimate<-(sum(est_tree_total_A,est_tree_total_B))/60
 
 
-SE4<-sqrt(var.est/2)
+SE4<-(sqrt(var_tree_total_A+var_tree_total_B))/60
+
 
 #90 CI for number of  tpHA#
 
-mean(estimates) + c(-1,1)* SE4 * qt(p=.95,df=1)
+tpha_estimate + c(-1,1)* SE4 * qt(p=.95,df=1)
 
 ```
 
@@ -88,31 +87,58 @@ mean(estimates) + c(-1,1)* SE4 * qt(p=.95,df=1)
 
 ```{r}
 #Estimate from Strata A#
-A_trees<-c(10.3,10.3,11.2,13.6,11.2,8.5,9.4,6.8,0,9.8,8.9,12.2,5.6,3.4)
-
-bamsq <- function(x) {
-   result<-((((x)/100)/2)^2)*3.14
+ba_total_function <- function(x) {
+   result<-18*10000*((((((x)/100)/2)^2)*3.14)/25)
    return(result)
 }
 
-bpHA.A<-(sum(bamsq(A_trees))/(4*25))*10000*.3
+Tba_hat_A1<-sum(ba_total_function(A_1))
+Tba_hat_A2<-sum(ba_total_function(A_2))
+Tba_hat_A3<-sum(ba_total_function(A_3))
+Tba_hat_A4<-sum(ba_total_function(A_4))
+
+Tba_all_plots_A<-c(Tba_hat_A1,Tba_hat_A2,Tba_hat_A3,Tba_hat_A4)
+  
+est_ba_total_A<-mean(Tba_all_plots_A)
+
+var_ba_total_A<-(1/4)*(var(Tba_all_plots_A))
+
 
 #Estimate from Strata B#
-bpHA.B<-(BAF*length(B_trees)/5)*.7
+ba_total_function <- function(x) {
+   result<-BAF*length(x)*42
+   return(result)
+}
+
+Tba_hat_B1<-ba_total_function(B_1)
+Tba_hat_B2<-ba_total_function(B_2)
+Tba_hat_B3<-ba_total_function(B_3)    
+Tba_hat_B4<-ba_total_function(B_4)
+Tba_hat_B5<-ba_total_function(B_5)
 
 
-estimatesBA<-c(bpHA.A,bpHA.B)
+Tba_all_plots_B<-c(Tba_hat_B1,Tba_hat_B2,Tba_hat_B3,Tba_hat_B4,Tba_hat_B5)
+  
+est_ba_total_B<-mean(Tba_all_plots_B)
 
-var_estBA<-var(estimatesBA)
-
-
-SE_BA<-sqrt(var_estBA/2)
-
-#90 CI for bapHA#
-
-mean(estimatesBA) + c(-1,1)* SE_BA * qt(p=.95,df=1)
+var_ba_total_B<-(1/5)*(var(all_plots_B))
 
 ```
+
+```{r}
+bapHA_estimate<-(sum(est_ba_total_A,est_ba_total_B))/60
+
+
+SE5<-(sqrt(var_ba_total_A+var_ba_total_B))/60
+
+
+#90 CI for number of  tpHA#
+
+bapHA_estimate + c(-1,1)* SE5 * qt(p=.95,df=1)
+
+```
+
+
 
 (6) Estimate the total ba in trees larger than 10cm, DBH as well as its standard error.
 ```{r}
