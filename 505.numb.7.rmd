@@ -174,7 +174,7 @@ est_ba_total_B_ten<-mean(Tba_all_plots_B_ten)
 
 ba_estimate_ten<-(sum(est_ba_total_A_ten,est_ba_total_B_ten))
 
-sqrt(var_ba_total_A_ten+var_ba_total_A_ten)
+sqrt(var_ba_total_A_ten+var_ba_total_B_ten)
 
 ```
 
@@ -188,21 +188,26 @@ No, you can not use the same estimators for each stratum because stratum B trees
 #Average diameter in stratum A#
 
 #Estimate from Strata A#
+total_diam_function <- function(x) {
+   result<-18*10000*sum(x)/25
+   return(result)
+}
 
-diam_A1<-sum(A_1)*400*18
-diam_A2<-sum(A_2)*400*18
-diam_A3<-sum(A_3)*400*18
-diam_A4<-sum(A_4)*400*18
+diam_A1<-total_diam_function(A_1)
+diam_A2<-total_diam_function(A_2)
+diam_A3<-total_diam_function(A_3)
+diam_A4<-total_diam_function(A_4)
 
-est_diam_total_A<-mean(diam_A1,diam_A2,diam_A3,diam_A4)
-  
+est_diam_total_A<-(sum(diam_A1,diam_A2,diam_A3,diam_A4))/4
+
+
 est_average_diam_A<-est_diam_total_A/est_tree_total_A
 
 
 #Average diameter in stratum B#
 
-total_diam<-function(x) {
-   result<-BAF*42*(sum(x/((x/200)^2)*3.14))
+total_diam <- function(x) {
+   result<-BAF*42*(sum(x/(3.14*(x/200)^2)))
    return(result)
 }
 
@@ -212,9 +217,9 @@ diam_B3<-total_diam(B_3)
 diam_B4<-total_diam(B_4)
 diam_B5<-total_diam(B_5)
 
-est_diam_total_all_plots_B<-mean(diam_B1,diam_B2,diam_B3,diam_B4,diam_B5)
+est_diam_total_all_plots_B<-(sum(diam_B1,diam_B2,diam_B3,diam_B4,diam_B5))/5
   
-est_diam_B<-est_diam_total_all_plots_B/est_tree_total_B
+est_average_diam_B<-est_diam_total_all_plots_B/est_tree_total_B
 
 
 
