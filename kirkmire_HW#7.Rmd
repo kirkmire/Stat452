@@ -1,0 +1,36 @@
+---
+title: "kirkmire_HW#7"
+author: "Colin Kirkmire"
+date: "May 3, 2016"
+output: html_document
+---
+
+(a)
+```{r}
+library(Stat2Data)
+data(MedGPA)
+med_data<-MedGPA[,c(1,2,3,5,10)]
+
+library(ggplot2)
+
+ggplot(med_data, aes(y=MCAT,x=GPA, shape=factor(Accept), color=factor(Accept)))+
+  geom_point(size=3)+
+  ggtitle("Score on MCAT vs GPA")+
+  xlab("GPA (0 - 4)")+
+  ylab("MCAT Score (18-48)")+
+  labs(color="Acceptance")+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14))
+```
+
+GPA appears to be a better predictor of acceptance since those with high GPAs past a certain threshold tend to be accepted irrespective of their MCAT score.  In contrast, many students with lesser GPAs that had roughly equivalent MCAT scores as those with higher GPAs were not accepted.
+
+```{r}
+med_table<-table(med_data$Sex,med_data$Accept)
+
+chisq.test(med_table)
+```
+There is very little evidence against the null hypothesis that acceptance is independent of gender.
+
+
+
