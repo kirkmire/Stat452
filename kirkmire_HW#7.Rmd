@@ -33,4 +33,61 @@ chisq.test(med_table)
 There is very little evidence against the null hypothesis that acceptance is independent of gender.
 
 
+(b) Fit an additive logistic regression mode for predicting Acceptance from Sex, GPA and MCAT
+```{r}
+add_log_model<-glm(formula = Acceptance ~ Sex + GPA+ MCAT, family = binomial, data = med_data)
+
+```
+
+(c) Squared Terms
+```{r}
+sq_log_model<-glm(formula = Acceptance ~ Sex + GPA + MCAT + I(GPA^2)+ I(MCAT^2), family = binomial, data = med_data)
+
+anova(add_log_model,sq_log_model,test="Chisq")
+```
+
+The deviance decreases only slightly whch provides little evidence against the null hypothesis that the added square terms are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+
+(d) Pairwise Interactions
+```{r}
+pairwise_log_model<-glm(formula = Acceptance ~ Sex+GPA+MCAT+Sex:GPA+Sex:MCAT+GPA:MCAT, family = binomial, data = med_data)
+
+anova(add_log_model,pairwise_log_model,test="Chisq")
+```
+
+The deviance decreases only slightly whch provides little evidence against the null hypothesis that the added square terms are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+
+(e) Leverages and Cook's Distance
+```{r}
+#leverage#
+lev<-hat(model.matrix(add_log_model))
+
+plot(lev)
+
+#Cooks Distance#
+plot(add_log_model,which=c(4))
+
+
+```
+Case #54 has the highest leverage value becuase this student has both a very low MCAT score (18) and GPA (2.8). This case should be removed since this student is not representative of most students who apply to medical school.  In fact, this student recieved the lowest score possible on the MCAT which implies that they were not prepared to be taking the test in the first place and likely not a serious candidate for admission to medical school.
+
+Case #40 has the highest value of Cook's distance.  This case has high leverage because the student had the fourth lowest GPA in the sample (3.14) and was still accepted to medical school. I do not believe this case warrants special treatment because there are several other students with similarly low GPAs that were also accepted. This situation does hint that there are additional variables that are important in determining admission apart from those in the model.
+
+(f)
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
