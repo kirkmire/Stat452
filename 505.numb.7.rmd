@@ -2,84 +2,60 @@
 title: "FORS 505"
 author: "Colin Kirkmire"
 date: "April 28, 2016"
-output: html_document
+output: word_document
 ---
 
 (4) Compute a 90% CI for the number of TPHA on the whole tract
-```{r setup, include=FALSE}
-
+```{r}
 A_1<-c(10.3,10.3,11.2,13.6)
 A_2<-c(11.2,8.5,9.4,6.8)
 A_3<-vector(mode="numeric", length=0)
 A_4<-c(9.8,8.9,12.2,5.6,3.4)
-
 B_1<-c(18.9,14.5,12.9,14.2,9.9)
 B_2<-c(11.2,21.3,14.2,15.3,8.2)
 B_3<-c(7.6)
 B_4<-c(10.3,17.4,19.2)
 B_5<-c(3.4,13.5,19.5,18.5,14.6)
-
 ```
-
 
 ```{r}
 #Estimate from Strata A#
 total_tree_function <- function(x) {
    result<-18*10000*(length(x)/25)
-   return(result)
-}
+   return(result)}
 
 T_hat_A1<-total_tree_function(A_1)
 T_hat_A2<-total_tree_function(A_2)
 T_hat_A3<-total_tree_function(A_3)
 T_hat_A4<-total_tree_function(A_4)
-
 all_plots_A<-c(T_hat_A1,T_hat_A2,T_hat_A3,T_hat_A4)
-  
 est_tree_total_A<-mean(all_plots_A)
-
 var_tree_total_A<-(1/4)*(var(all_plots_A))
-
 ```
 
 ```{r}
 #Estimate from Strata B#
-
 BAF<-4
 
 tf <- function(x) {
    result<-1/(3.14*((x/200)^2))
-   return(result)
-}
-
+   return(result)}
 T_hat_B1<-42*BAF*(sum(tf(B_1)))
 T_hat_B2<-42*BAF*(sum(tf(B_2)))
 T_hat_B3<-42*BAF*(sum(tf(B_3)))
 T_hat_B4<-42*BAF*(sum(tf(B_4)))
 T_hat_B5<-42*BAF*(sum(tf(B_5)))
-    
-
-
 all_plots_B<-c(T_hat_B1,T_hat_B2,T_hat_B3,T_hat_B4,T_hat_B5)
-  
 est_tree_total_B<-mean(all_plots_B)
-
 var_tree_total_B<-(1/5)*(var(all_plots_B))
-
 ```
-
 
 ```{r}
 tpha_estimate<-(sum(est_tree_total_A,est_tree_total_B))/60
-
-
 SE4<-(sqrt(var_tree_total_A+var_tree_total_B))/60
 
-
 #90 CI for number of  tpHA#
-
 tpha_estimate + c(-1,1)* SE4 * qt(p=.95,df=7)
-
 ```
 
 (5) 90% CI for baHA
@@ -88,61 +64,42 @@ tpha_estimate + c(-1,1)* SE4 * qt(p=.95,df=7)
 #Estimate from Strata A#
 ba_total_function_A <- function(x) {
    result<-sum(18*400*(((((x)/100)/2)^2)*3.14))
-   return(result)
-}
-
+   return(result)}
 Tba_hat_A1<-ba_total_function_A(A_1)
 Tba_hat_A2<-ba_total_function_A(A_2)
 Tba_hat_A3<-ba_total_function_A(A_3)
 Tba_hat_A4<-ba_total_function_A(A_4)
 
 Tba_all_plots_A<-c(Tba_hat_A1,Tba_hat_A2,Tba_hat_A3,Tba_hat_A4)
-  
 est_ba_total_A<-mean(Tba_all_plots_A)
-
 var_ba_total_A<-(1/4)*(var(Tba_all_plots_A))
-
 
 #Estimate from Strata B#
 ba_total_function_B <- function(x) {
    result<-BAF*length(x)*42
-   return(result)
-}
-
+   return(result)}
 Tba_hat_B1<-ba_total_function_B(B_1)
 Tba_hat_B2<-ba_total_function_B(B_2)
 Tba_hat_B3<-ba_total_function_B(B_3)    
 Tba_hat_B4<-ba_total_function_B(B_4)
 Tba_hat_B5<-ba_total_function_B(B_5)
 
-
 Tba_all_plots_B<-c(Tba_hat_B1,Tba_hat_B2,Tba_hat_B3,Tba_hat_B4,Tba_hat_B5)
-  
 est_ba_total_B<-mean(Tba_all_plots_B)
-
 var_ba_total_B<-(1/5)*(var(Tba_all_plots_B))
-
 ```
 
 ```{r}
 bapHA_estimate<-(sum(est_ba_total_A,est_ba_total_B))/60
-
-
 SE5<-(sqrt(var_ba_total_A+var_ba_total_B))/60
 
-
 #90 CI for number of  bapHA#
-
 bapHA_estimate + c(-1,1)* SE5 * qt(p=.95,df=7)
-
 ```
-
-
 
 (6) Estimate the total ba in trees larger than 10cm DBH as well as its standard error.
 ```{r}
 #BA>10cm for strata A#
-
 Tba_hat_A1_ten<-ba_total_function_A(A_1[A_1>10])
 Tba_hat_A2_ten<-ba_total_function_A(A_2[A_2>10])
 Tba_hat_A3_ten<-ba_total_function_A(A_3[A_3>10])
@@ -151,18 +108,14 @@ Tba_hat_A4_ten<-ba_total_function_A(A_4[A_4>10])
 Tba_all_plots_A_ten<-c(Tba_hat_A1_ten,Tba_hat_A2_ten,Tba_hat_A3_ten,Tba_hat_A4_ten)
   
 est_ba_total_A_ten<-mean(Tba_all_plots_A_ten)
-
 var_ba_total_A_ten<-(1/4)*(var(Tba_all_plots_A_ten))
 
-
 #BA>10cm for strata B#
-
 Tba_hat_B1_ten<-ba_total_function_B(B_1[B_1>10])
 Tba_hat_B2_ten<-ba_total_function_B(B_2[B_2>10])
 Tba_hat_B3_ten<-ba_total_function_B(B_3[B_3>10])    
 Tba_hat_B4_ten<-ba_total_function_B(B_4[B_4>10])
 Tba_hat_B5_ten<-ba_total_function_B(B_5[B_5>10])
-
 
 Tba_all_plots_B_ten<-c(Tba_hat_B1_ten,Tba_hat_B2_ten,Tba_hat_B3_ten,Tba_hat_B4_ten,Tba_hat_B5_ten)
   
@@ -171,7 +124,6 @@ var_ba_total_B_ten<-(1/5)*(var(Tba_all_plots_B_ten))
 est_ba_total_B_ten<-mean(Tba_all_plots_B_ten)
 
 #Estimated Total BA in meters for whole stand#
-
 ba_estimate_ten<-(sum(est_ba_total_A_ten,est_ba_total_B_ten))
 ba_estimate_ten
 
@@ -182,17 +134,13 @@ SE6
 
 (7) Estimate the average diameter of trees in stratum A and, seperately, of trees in stratum B.
 
-
 No, you can not use the same estimators for each stratum because stratum B trees were selected using an unequal probability sampling method (variable radius plots) in which the larger trees were selected with a preference.
 
 ```{r}
 #Average diameter in stratum A#
-
-#Estimate from Strata A#
 total_diam_function <- function(x) {
    result<-18*10000*sum(x)/25
-   return(result)
-}
+   return(result)}
 
 diam_A1<-total_diam_function(A_1)
 diam_A2<-total_diam_function(A_2)
@@ -201,16 +149,13 @@ diam_A4<-total_diam_function(A_4)
 
 est_diam_total_A<-(sum(diam_A1,diam_A2,diam_A3,diam_A4))/4
 
-
 est_average_diam_A<-est_diam_total_A/est_tree_total_A
 est_average_diam_A
 
 #Average diameter in stratum B#
-
 total_diam <- function(x) {
    result<-BAF*42*(sum(x/(3.14*(x/200)^2)))
-   return(result)
-}
+   return(result)}
 
 diam_B1<-total_diam(B_1)
 diam_B2<-total_diam(B_2)
@@ -219,12 +164,8 @@ diam_B4<-total_diam(B_4)
 diam_B5<-total_diam(B_5)
 
 est_diam_total_all_plots_B<-(sum(diam_B1,diam_B2,diam_B3,diam_B4,diam_B5))/5
-  
 est_average_diam_B<-est_diam_total_all_plots_B/est_tree_total_B
 est_average_diam_B
-
-
-
 ```
 
 
