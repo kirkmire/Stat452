@@ -100,10 +100,14 @@ cbind(confint(add_log_model,level=.95),est_coef)
 
 
 ```
+Interpreting logit coefficients:
+
+Sex: The log odds for a male being admitted are -1.5973 less than that of a female given that the other variables are held constant. This translates to odds of female acceptance being between 3.51 times as big as that of the male (95% CI: 16.50 times greater, 1.12 times less).
+
+GPA: The log odds for admittance increase by an estimated 5.14 for every additional grade point. The 95% confidence interval for the multiplicitive increase in odds of admittance with every additional .1 grade point is between 6.7194 to 11203.5918 times bigger.
 
 
 
-Interpreting logit coefficients
 
 The estimated coefficients must be interpreted with care. Instead of the slope coefficients (B) being the rate of change in Y (the dependent variables) as X changes (as in the LP model or OLS regression), now the slope coefficient is interpreted as the rate of change in the "log odds" as X changes. This explanation is not very intuitive. It is possible to compute the more intuitive "marginal effect" of a continuous independent variable on the probability. The marginal effect is
 
