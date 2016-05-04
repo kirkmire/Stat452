@@ -73,16 +73,44 @@ Case #54 has the highest leverage value becuase this student has both a very low
 
 Case #40 has the highest value of Cook's distance.  This case has high leverage because the student had the fourth lowest GPA in the sample (3.14) and was still accepted to medical school. I do not believe this case warrants special treatment because there are several other students with similarly low GPAs that were also accepted. This situation does hint that there are additional variables that are important in determining admission apart from those in the model.
 
-(f)
+(f) Hosmer-Lemeshow Goodness-of-fit
+```{r}
+library(ResourceSelection)
+hoslem.test(med_data$Acceptance, fitted(add_log_model), g=10)
+```
+
+The hosmer-lemeshow test shows that the observed numbers of accepted students compared to the predicted numbers of accepted students according to the logistical model are quite similar as indicated by the moderate chi-square statistic and high p-value.  There is very little evidence that our additaive logistical model is not a good fit for predicting acceptance.
+
+
+(g) Compute Confidence Intervals for the parameters
 ```{r}
 
 ```
 
 
+(h)Plot the probability of adission as a function of GPA for males and females seperately, assuming that MCAT score is fixed at its median.
+```{r}
+sum_add_log_model<-summary(add_log_model)
+
+est_coef<-sum_add_log_model$coefficients[1:4,1]
+
+cbind(confint(add_log_model,level=.95),est_coef)
 
 
 
 
+```
+
+
+
+Interpreting logit coefficients
+
+The estimated coefficients must be interpreted with care. Instead of the slope coefficients (B) being the rate of change in Y (the dependent variables) as X changes (as in the LP model or OLS regression), now the slope coefficient is interpreted as the rate of change in the "log odds" as X changes. This explanation is not very intuitive. It is possible to compute the more intuitive "marginal effect" of a continuous independent variable on the probability. The marginal effect is
+
+dp/dB = f(BX)B
+where f(.) is the density function of the cumulative probability distribution function [F(BX), which ranges from 0 to 1]. The marginal effects depend on the values of the independent variables, so, it is often useful to evaluate the marginal effects at the means of the independent variables. (SPSS doesn't have an option for the marginal effects. If you need to compute marginal effects you can use the LIMDEP statistical package which is available on the academic mainframe.)
+
+An interpretation of the logit coefficient which is usually more intuitive (especially for dummy independent variables) is the "odds ratio"-- expB is the effect of the independent variable on the "odds ratio" [the odds ratio is the probability of the event divided by the probability of the nonevent]. For example, if expB3 =2, then a one unit change in X3 would make the event twice as likely (.67/.33) to occur. Odds ratios equal to 1 mean that there is a 50/50 chance that the event will occur with a small change in the independent variable. Negative coefficients lead to odds ratios less than one: if expB2 =.67, then a one unit change in X2 leads to the event being less likely (.40/.60) to occur. {Odds ratios less than 1 (negative coefficients) tend to be harder to interpret than odds ratios greater than one(positive coefficients).} Note that odds ratios for continuous independent variables tend to be close to one, this does NOT suggest that the coefficients are insignificant. Use the Wald statistic (see below) to test for statistical significance.
 
 
 
