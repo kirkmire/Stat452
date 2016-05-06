@@ -1,0 +1,14 @@
+---
+title: "HW#7Patterson"
+author: "Colin Kirkmire"
+date: "May 2, 2016"
+output: html_document
+---
+
+```{r}
+library(Strat2Data)
+data(MedGPA)
+med_data<-MedGPA[,c(1,2,3,5,10)]
+
+```
+

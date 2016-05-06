@@ -1,0 +1,37 @@
+---
+title: "lab#12"
+author: "Colin Kirkmire"
+date: "May 4, 2016"
+output: word_document
+---
+
+
+Homework[1]: In the data file deathpenalty.csv, there are 6 levels of crime severity, listed, from 1 = low level bar room brawls, liquor-induced arguments, and domestic quarrels, through 6 = high level felonies of viciousness, cruelty, and coldblooded
+acts, along with the sentences of death penalty given (1) or not given (0). Form a logistic model, give the equation of the model, the strength of the model parameters, and describe the slope in terms of odds increase for death penalty.
+
+```{r}
+deathpenalty <- read.csv("G:/STAT 458/Lab12/deathpenalty.csv")
+
+penalty_log_model<-glm(deathpenalty$death ~ deathpenalty$severity, family=binomial(logit))
+
+sum_log_model<-summary(penalty_log_model)
+sum_log_model
+
+exp(sum_log_model$coefficients[2,1])
+
+exp(confint(penalty_log_model))
+
+```
+The odds of receiving the death penalty increase by 5.14 times (95% CI between 3.33 and 10.37) for every increase in level of crime severity.  This CI for the coeficient of severity provides strong evidence (p= 3.22e-09) that there is indeed a large increase in the odds of recieving the death penalty for every one level increase in severity. 
+
+```{r}
+x <- c(0:6, by=1)
+
+y <- exp(sum_log_model$coefficients[1,1] + sum_log_model$coefficients[2,1] * x)/(1+exp(sum_log_model$coefficients[1,1] + sum_log_model$coefficients[2,1] * x))
+
+plot(x,y)
+```
+
+The odds of increase for death penalty increase on a sigmoidal curve in which the odds of death penalty are approximately zero for crimes classified as "low level bar room brawls" and remain quite low for the second level of crimes.  However, the odds of death penalty increase to around .5 for the third level of crime severity (Probability of .33).  The odds continue to increase greatly at the fourth level (odds~.8, probability=.44).  At levels four and five, the odds level out at approximately 1 (probability=.5).
+
+
