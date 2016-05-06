@@ -31,7 +31,7 @@ med_table
 
 chisq.test(med_table)
 ```
-There is very little evidence against the null hypothesis that acceptance is independent of gender. There does not appear to be a strong relationship between sex and accept.  
+The chi-squared test provides very strong evidence that acceptance is independent of gender. There does not appear to be a strong relationship between sex and accept.  
 
 
 (b) Fit an additive logistic regression mode for predicting Acceptance from Sex, GPA and MCAT
@@ -47,7 +47,7 @@ sq_log_model<-glm(formula = Acceptance ~ Sex + GPA + MCAT + I(GPA^2)+ I(MCAT^2),
 anova(add_log_model,sq_log_model,test="Chisq")
 ```
 
-The deviance decreases only slightly slightly provides little evidence against the null hypothesis that the added square terms are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+The deviance decreases only slightly and the chi-squared test provides strong evidence that both of the added square coefficients are equal to zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
 
 (d) Pairwise Interactions
 ```{r}
@@ -56,7 +56,7 @@ pairwise_log_model<-glm(formula = Acceptance ~ Sex+GPA+MCAT+Sex:GPA+Sex:MCAT+GPA
 anova(add_log_model,pairwise_log_model,test="Chisq")
 ```
 
-The deviance decreases only slightly in the model that includes the squares of MCAT and GPA which provides little evidence against the null hypothesis that the added pairwise  are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+The deviance decreases only slightly and the chi-squared statistic provides strong evidence that the coefficients of the added pairwise interactions are equal to zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
 
 (e) Leverages and Cook's Distance
 ```{r}
@@ -96,16 +96,19 @@ hosmerlem <-  function (y, yhat, g = 10,output=F) {
 hosmerlem(med_data$Acceptance, predict(add_log_model,type="response"),output=T)
 ```
 
-The hosmer-lemeshow test shows that the observed numbers of accepted students compared to the predicted numbers of accepted students according to the logistical model are quite similar as indicated by the moderate chi-square statistic and high p-value.  There is very little evidence that our additaive logistical model is not a good fit for predicting acceptance.
+The Hosmer-Lemeshow test shows that the observed numbers of accepted students compared to the predicted numbers of accepted students according to the logistical model are quite similar as indicated by the moderate chi-square statistic and high p-value.  There is strong evidence that our additive logistical model is a good fit for predicting acceptance.
 
 
 (g) Compute Confidence Intervals for the parameters
 ```{r}
 sum_add_log_model<-summary(add_log_model)
+sum_add_log_model
 
 est_coef<-sum_add_log_model$coefficients[1:4,1]
 
 tbl<-cbind(confint(add_log_model,level=.95),est_coef)
+
+
 
 #CI for Sex#
 exp(-tbl[2,1:3])
@@ -115,14 +118,15 @@ exp(.1*tbl[3,1:3])
 
 #CI for MCAT#
 exp(tbl[4,1:3])
+
 ```
 Interpreting logit coefficients:
 
-Sex: The log odds for a male being admitted are -1.5973 less than that of a female given that the other variables are held constant. This translates to odds of female acceptance being between 3.51 times as big as that of the male (95% CI: 16.50 times greater, 1.12 times less).
+Sex: The log odds for a male being admitted are 1.258 less than that of a female given that the other variables are held constant. This translates to odds of female acceptance being between 3.51 times larger than that of male (95% CI: .89 to 16.50 times). Although the extent of the interval appraoches a 17 times increase in odds of acceptance, the interval also contains values less than one which suggests that there is some inconclusiveness of the effect of gender on odds of acceptance. The inconclusiveness corresponds to our failure in part (a) to establish a relationship between gender and acceptance.
 
-GPA: The log odds for admittance increase by an estimated 5.14 for every additional grade point. The 95% confidence interval for the multiplicitive increase in odds of admittance with every additional .1 grade point is between 6.7194 to 11203.5918 times bigger.
+GPA: The odds for admittance increase by an estimated 1.67 times for every additional grade point given that all other variablesareheld constant. The 95% confidence interval for the multiplicitive increase in the odds of admittance with every additional .1 grade point is from 1.21 to 2.54 times larger.
 
-MCAT: The odds of acceptance increases by between .98 and 1.51 times for every increase in one point of MCAT score given that all other variables are held constant. This interval contains one which indicates that MCAT score increases do not greatly increase odds of admission given that other variables are constant. 
+MCAT: The odds of acceptance increases by 1.19 times (95% CI: between .98 and 1.51 times) for every increase in one point of MCAT score given that all other variables are held constant. This interval contains one which indicates that effect of MCAT on odds of acceptance is inconclusive and at provides only weak evidence that the effect of MCAT score increases the odds of acceptance.
 
 
 
@@ -132,8 +136,8 @@ MCAT: The odds of acceptance increases by between .98 and 1.51 times for every i
 median(med_data$MCAT)
 
 plot(jitter(Acceptance,factor=.3)~ GPA, data=med_data, pch=c(1,3)[Sex],
-ylab="Probability of Acceptance", xlab="GPA")
-main="Probability of Acceptance vs GPA"
+ylab="Probability of Acceptance", xlab="GPA",
+main="Probability of Acceptance vs GPA")
 legend("topleft",levels(med_data$Sex),pch=c(1,3),lty=c(1,2))
 curve(predict(add_log_model,newdata=data.frame(GPA=x,Sex="F",MCAT=36),type="response"),add=T)
 curve(predict(add_log_model,newdata=data.frame(GPA=x,Sex="M",MCAT=36),type="response"),lty=2,add=T)
