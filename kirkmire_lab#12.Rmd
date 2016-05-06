@@ -6,8 +6,7 @@ output: word_document
 ---
 
 
-Homework[1]: In the data file deathpenalty.csv, there are 6 levels of crime severity, listed, from 1 = low level bar room brawls, liquor-induced arguments, and domestic quarrels, through 6 = high level felonies of viciousness, cruelty, and coldblooded
-acts, along with the sentences of death penalty given (1) or not given (0). Form a logistic model, give the equation of the model, the strength of the model parameters, and describe the slope in terms of odds increase for death penalty.
+Homework[1]: In the data file deathpenalty.csv, there are 6 levels of crime severity, listed, from 1 = low level bar room brawls, liquor-induced arguments, and domestic quarrels, through 6 = high level felonies of viciousness, cruelty, and coldblooded acts, along with the sentences of death penalty given (1) or not given (0). Form a logistic model, give the equation of the model, the strength of the model parameters, and describe the slope in terms of odds increase for death penalty.
 
 ```{r}
 deathpenalty <- read.csv("G:/STAT 458/Lab12/deathpenalty.csv")
@@ -21,17 +20,86 @@ exp(sum_log_model$coefficients[2,1])
 
 exp(confint(penalty_log_model))
 
+anova(penalty_log_model)
 ```
-The odds of receiving the death penalty increase by 5.14 times (95% CI between 3.33 and 10.37) for every increase in level of crime severity.  This CI for the coeficient of severity provides strong evidence (p= 3.22e-09) that there is indeed a large increase in the odds of recieving the death penalty for every one level increase in severity. 
+The odds of receiving the death penalty increase by 5.14 times (95% CI between 3.33 and 10.37) for every increase in level of crime severity.  
+
+The CI for the coeficient of severity provides strong evidence (p= 3.22e-09) that there is indeed a large increase in the odds of recieving the death penalty for every one level increase in severity. 
+
+THe analysis of variance reveals that the logistic model provides a much lower residual deviance than the null model.
 
 ```{r}
-x <- c(0:6, by=1)
+x <- c(1:6, by=1)
 
 y <- exp(sum_log_model$coefficients[1,1] + sum_log_model$coefficients[2,1] * x)/(1+exp(sum_log_model$coefficients[1,1] + sum_log_model$coefficients[2,1] * x))
 
 plot(x,y)
+
 ```
 
-The odds of increase for death penalty increase on a sigmoidal curve in which the odds of death penalty are approximately zero for crimes classified as "low level bar room brawls" and remain quite low for the second level of crimes.  However, the odds of death penalty increase to around .5 for the third level of crime severity (Probability of .33).  The odds continue to increase greatly at the fourth level (odds~.8, probability=.44).  At levels four and five, the odds level out at approximately 1 (probability=.5).
+The probability of  death penalty increase on a sigmoidal curve in which the probabilty of death penalty are near zero for crimes classified as "low level bar room brawls" and remain quite low for the second level of crimes.  However, the probability of death penalty increase to around .5 for the third level of crime severity which appears to be near the inflection point of the model.  The probability continues to increase greatly at the fourth level.  At levels four and five, the probability levels out at approximately 1. his fits the data well since nearly all of the level 4,5 and 6 level offenders in the sample received the death penalty.
+
+Homework[2]: We have data on heart attack susceptible patients, where levels of creatinine kinase (an enzyme shortened to ck), along with whether they have had a
+heart attack or have not had a heart attack. Using the data heartattack.csv, do a logistic regression fit.
+You should set it up like we did for the previous model, including total, attack (which is “success”), difference (which is “failure”), etc. for the glm() model.
+Show plot of attack/total vs ck with model superimposed on it, as well as show output and write the equation
+logit(y) = βo + β1 x in context. Also, interpret the slope.
+
+```{r}
+heartattack <- read.csv("G:/STAT 458/Lab12/heartattack.csv")
+
+ck<-heartattack[,1]
+total<-heartattack[,2]+heartattack[,3]
+
+ht<-heartattack[,2]
+
+proport<-ht/total
+
+difference<-total-ht
+
+plot(ck,proport)
+
+lines(lowess(ck,proport))
+
+log_model_ht<-glm(cbind(ht,difference)~ck,family=binomial)
+
+sum_log_model_ht<-summary(log_model_ht)
+sum_log_model_ht
+
+plot(ck,proport,main="logit(heart attack/total",xlab = "Level of Creatine Kinase",ylab="Probability of Heart Attack")
+
+lines(ck, log_model_ht$fitted.values)
+
+#*100 for interpretation of increase in ck level of 100
+exp(sum_log_model_ht$coefficients[2,1]*100)
+
+exp(confint(log_model_ht)*100)
+
+anova(log_model_ht)
+```
+
+
+Equation of the model:
+
+logit(heart attack/total)=-3.03+.035(level of creatine kinase)
+
+The odds of a heart attack increase by an estimated 33.46 times (95% CI: 15.98, 79.54) for every 100 level increase creatine kinase. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
