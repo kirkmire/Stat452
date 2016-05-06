@@ -1,5 +1,5 @@
 ---
-title: "kirkmire_HW#7"
+title: "Homework #7"
 author: "Colin Kirkmire"
 date: "May 3, 2016"
 output: html_document
@@ -23,7 +23,7 @@ ggplot(med_data, aes(y=MCAT,x=GPA, color=factor(Accept)))+
         axis.title=element_text(size=14))
 ```
 
-GPA appears to be a better predictor of acceptance since those with high GPAs past a certain threshold tend to be accepted irrespective of their MCAT score.  In contrast, many students with lesser GPAs that had roughly equivalent MCAT scores as those with higher GPAs were not accepted.
+GPA appears to be a better predictor of acceptance since those with high GPAs past a certain threshold tend to be accepted irrespective of their MCAT score.  In addition, many students with lesser GPAs that had roughly equivalent MCAT scores as those with higher GPAs were not accepted.
 
 ```{r}
 med_table<-table(med_data$Sex,med_data$Accept)
@@ -31,7 +31,7 @@ med_table
 
 chisq.test(med_table)
 ```
-The chi-squared test provides very strong evidence that acceptance is independent of gender. There does not appear to be a strong relationship between sex and accept.  
+The chi-squared test provides strong evidence that acceptance is independent of gender. There does not appear to be a strong relationship between sex and accept.  
 
 
 (b) Fit an additive logistic regression mode for predicting Acceptance from Sex, GPA and MCAT
@@ -47,7 +47,7 @@ sq_log_model<-glm(formula = Acceptance ~ Sex + GPA + MCAT + I(GPA^2)+ I(MCAT^2),
 anova(add_log_model,sq_log_model,test="Chisq")
 ```
 
-The deviance decreases only slightly and the chi-squared test provides strong evidence that both of the added square coefficients are equal to zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+The residual deviance decreases only slightly and the chi-squared test provides strong evidence that both of the added square coefficients are equal to zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
 
 (d) Pairwise Interactions
 ```{r}
@@ -56,7 +56,7 @@ pairwise_log_model<-glm(formula = Acceptance ~ Sex+GPA+MCAT+Sex:GPA+Sex:MCAT+GPA
 anova(add_log_model,pairwise_log_model,test="Chisq")
 ```
 
-The deviance decreases only slightly and the chi-squared statistic provides strong evidence that the coefficients of the added pairwise interactions are equal to zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+The residual deviance decreases only slightly and the chi-squared statistic provides strong evidence that the coefficients of the added pairwise interactions are equal to zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
 
 (e) Leverages and Cook's Distance
 ```{r}
@@ -70,7 +70,8 @@ plot(add_log_model,which=c(4))
 
 
 ```
-Case #54 has the highest leverage value becuase this student has both a very low MCAT score (18) and GPA (2.8). This student recieved the lowest score possible on the MCAT which implies that they were not prepared to be taking the test in the first place and likely not a serious candidate for admission to medical school. This student's denial of admmission to medical school is expected and does not warrent any special treatment.  However, if this student were accepted it would be reasonable to remove it from the model because this case represents an extraordinarily unusual admission or a simple mistake in entering data.
+
+Case #54 has the highest leverage value because this student has both a very low MCAT score (18) and GPA (2.8). This student recieved the lowest score possible on the MCAT which implies that they were not prepared to be taking the test in the first place and likely not a serious candidate for admission to medical school. This student's denial of admmission to medical school is expected and does not warrent any special treatment.  However, if this student were accepted it would be reasonable to remove it from the model because this case would represent an extraordinarily unusual admission or a simple mistake in entering data.
 
 Case #40 has the highest value of Cook's distance.  This case has high leverage because the student had the fourth lowest GPA in the sample (3.14) and was still accepted to medical school. I do not believe this case warrants special treatment because there are several other students with similarly low GPAs that were also accepted. This situation does hint that there are additional variables that are important in determining admission apart from those included in the model.
 
@@ -96,7 +97,7 @@ hosmerlem <-  function (y, yhat, g = 10,output=F) {
 hosmerlem(med_data$Acceptance, predict(add_log_model,type="response"),output=T)
 ```
 
-The Hosmer-Lemeshow test shows that the observed numbers of accepted students compared to the predicted numbers of accepted students according to the logistical model are quite similar as indicated by the moderate chi-square statistic and high p-value.  There is strong evidence that our additive logistical model is a good fit for predicting acceptance.
+The Hosmer-Lemeshow test shows that the observed number of accepted students in each interval compared to the predicted number of accepted students according to the logistical model are quite similar (as indicated by the moderate chi-square statistic and high p-value).  There is strong evidence that our additive logistical model is a good fit for predicting acceptance for this data.
 
 
 (g) Compute Confidence Intervals for the parameters
@@ -113,18 +114,24 @@ tbl<-cbind(confint(add_log_model,level=.95),est_coef)
 #CI for Sex#
 exp(-tbl[2,1:3])
 
-#CI for GPA#
-exp(.1*tbl[3,1:3])
 
-#CI for MCAT#
-exp(tbl[4,1:3])
 
 ```
 Interpreting logit coefficients:
 
-Sex: The log odds for a male being admitted are 1.258 less than that of a female given that the other variables are held constant. This translates to odds of female acceptance being between 3.51 times larger than that of male (95% CI: .89 to 16.50 times). Although the extent of the interval appraoches a 17 times increase in odds of acceptance, the interval also contains values less than one which suggests that there is some inconclusiveness of the effect of gender on odds of acceptance. The inconclusiveness corresponds to our failure in part (a) to establish a relationship between gender and acceptance.
+Sex: The log odds for a male being admitted are 1.258 less than that of a female given that the other variables are held constant. This translates to odds of female acceptance being between 3.51 times larger than that of male (95% CI: .89 to 16.50 times). Although the extent of the interval approaches a 17 times increase in odds of acceptance, the interval also contains values less than one which suggests that there is some inconclusiveness of the effect of gender on odds of acceptance. The inconclusiveness corresponds to our failure in part (a) to establish a relationship between gender and acceptance.
 
-GPA: The odds for admittance increase by an estimated 1.67 times for every additional grade point given that all other variablesareheld constant. The 95% confidence interval for the multiplicitive increase in the odds of admittance with every additional .1 grade point is from 1.21 to 2.54 times larger.
+```{r}
+#CI for GPA#
+exp(.1*tbl[3,1:3])
+```
+
+GPA: The odds for admittance increase by an estimated 1.67 times for every additional grade point given that all other variables are held constant. The 95% confidence interval for the multiplicitive increase in the odds of admittance with every additional .1 grade point is from 1.21 to 2.54 times larger.
+
+```{r}
+#CI for MCAT#
+exp(tbl[4,1:3])
+```
 
 MCAT: The odds of acceptance increases by 1.19 times (95% CI: between .98 and 1.51 times) for every increase in one point of MCAT score given that all other variables are held constant. This interval contains one which indicates that effect of MCAT on odds of acceptance is inconclusive and at provides only weak evidence that the effect of MCAT score increases the odds of acceptance.
 
@@ -151,8 +158,8 @@ Plot the probability of admission as a function of MCAT for males and females se
 median(med_data$GPA)
 
 plot(jitter(Acceptance,factor=.3)~ MCAT, data=med_data, pch=c(1,3)[Sex],
-ylab="Probability of Acceptance", xlab="MCAT Score")
-main="Probability of Acceptance vs MCAT Score"
+ylab="Probability of Acceptance", xlab="MCAT Score",
+main="Probability of Acceptance vs MCAT Score")
 legend("topleft",levels(med_data$Sex),pch=c(1,3),lty=c(1,2))
 curve(predict(add_log_model,newdata=data.frame(MCAT=x,Sex="F",GPA=3.58),type="response"),add=T)
 curve(predict(add_log_model,newdata=data.frame(GPA=3.58,Sex="M",MCAT=x),type="response"),lty=2,add=T)
