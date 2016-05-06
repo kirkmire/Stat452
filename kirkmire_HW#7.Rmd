@@ -13,10 +13,10 @@ med_data<-MedGPA[,c(1,2,3,5,10)]
 
 library(ggplot2)
 
-ggplot(med_data, aes(y=MCAT,x=GPA, shape=factor(Accept), color=factor(Accept)))+
+ggplot(med_data, aes(y=MCAT,x=GPA, color=factor(Accept)))+
   geom_point(size=3)+
   ggtitle("Score on MCAT vs GPA")+
-  xlab("GPA (0 - 4)")+
+  xlab("GPA (0-4)")+
   ylab("MCAT Score (18-48)")+
   labs(color="Acceptance")+
   theme(axis.text=element_text(size=12),
@@ -27,10 +27,11 @@ GPA appears to be a better predictor of acceptance since those with high GPAs pa
 
 ```{r}
 med_table<-table(med_data$Sex,med_data$Accept)
+med_table
 
 chisq.test(med_table)
 ```
-There is very little evidence against the null hypothesis that acceptance is independent of gender.
+There is very little evidence against the null hypothesis that acceptance is independent of gender. There does not appear to be a strong relationship between sex and accept.  
 
 
 (b) Fit an additive logistic regression mode for predicting Acceptance from Sex, GPA and MCAT
@@ -46,7 +47,7 @@ sq_log_model<-glm(formula = Acceptance ~ Sex + GPA + MCAT + I(GPA^2)+ I(MCAT^2),
 anova(add_log_model,sq_log_model,test="Chisq")
 ```
 
-The deviance decreases only slightly whch provides little evidence against the null hypothesis that the added square terms are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+The deviance decreases only slightly slightly provides little evidence against the null hypothesis that the added square terms are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
 
 (d) Pairwise Interactions
 ```{r}
@@ -55,7 +56,7 @@ pairwise_log_model<-glm(formula = Acceptance ~ Sex+GPA+MCAT+Sex:GPA+Sex:MCAT+GPA
 anova(add_log_model,pairwise_log_model,test="Chisq")
 ```
 
-The deviance decreases only slightly whch provides little evidence against the null hypothesis that the added square terms are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
+The deviance decreases only slightly in the model that includes the squares of MCAT and GPA which provides little evidence against the null hypothesis that the added pairwise  are zero. Therefore, it is not neccesary or advisable to add the squared terms to the model.
 
 (e) Leverages and Cook's Distance
 ```{r}
@@ -69,9 +70,9 @@ plot(add_log_model,which=c(4))
 
 
 ```
-Case #54 has the highest leverage value becuase this student has both a very low MCAT score (18) and GPA (2.8). This case should be removed since this student is not representative of most students who apply to medical school.  In fact, this student recieved the lowest score possible on the MCAT which implies that they were not prepared to be taking the test in the first place and likely not a serious candidate for admission to medical school.
+Case #54 has the highest leverage value becuase this student has both a very low MCAT score (18) and GPA (2.8). This student recieved the lowest score possible on the MCAT which implies that they were not prepared to be taking the test in the first place and likely not a serious candidate for admission to medical school. This student's denial of admmission to medical school is expected and does not warrent any special treatment.  However, if this student were accepted it would be reasonable to remove it from the model because this case represents an extraordinarily unusual admission or a simple mistake in entering data.
 
-Case #40 has the highest value of Cook's distance.  This case has high leverage because the student had the fourth lowest GPA in the sample (3.14) and was still accepted to medical school. I do not believe this case warrants special treatment because there are several other students with similarly low GPAs that were also accepted. This situation does hint that there are additional variables that are important in determining admission apart from those in the model.
+Case #40 has the highest value of Cook's distance.  This case has high leverage because the student had the fourth lowest GPA in the sample (3.14) and was still accepted to medical school. I do not believe this case warrants special treatment because there are several other students with similarly low GPAs that were also accepted. This situation does hint that there are additional variables that are important in determining admission apart from those included in the model.
 
 (f) Hosmer-Lemeshow Goodness-of-fit
 ```{r}
