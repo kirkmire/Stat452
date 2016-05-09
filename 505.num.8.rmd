@@ -14,22 +14,26 @@ lambda_2<-sum(petrifiedwood$X2intLength[1:39])/(12*1000)
 
 both_samples<-c(lambda_1,lambda_2)
 est_percent_cover<-mean(both_samples)
-SE<-sd(both_samples)
+SE1<-sd(both_samples)/sqrt(length(both_samples))
 
-#90 CI for number of  tpHA#
-est_percent_cover + c(-1,1)* SE * qt(p=.95,df=1)
+#90% CI for Percentage Cover#
+est_percent_cover + c(-1,1)* SE1 * qt(p=.90,df=1)
+
 
 ```
 
 ```{r}
-lambda_1_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X1intLength[1:16]/1000))
+lambda_1_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X1intLength[1:16]/1000))*10000
 
-lambda_2_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X2intLength[1:39]/1000))
+lambda_2_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X2intLength[1:39]/1000))*10000
 
 both_samples_count<-c(lambda_1_count,lambda_2_count)
 
-est_number_per_ha<-mean(both_samples)*1000
+est_number_per_ha<-mean(both_samples_count)
   
-SE<-sd(both_samples_count)
+SE2<-(sd(both_samples_count)/sqrt(length(both_samples_count)))
+
+#90% CI for number of  number of petrified wood particles per hectare#
+est_number_per_ha + c(-1,1)* SE2 * qt(p=90,df=1)
 ```
 
