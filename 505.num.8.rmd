@@ -1,0 +1,35 @@
+---
+title: 'FORS505 #8'
+author: "Colin Kirkmire"
+date: "May 6, 2016"
+output: word_document
+---
+
+```{r}
+petrifiedwood <- read.csv("C:/Users/Colin/Desktop/petrifiedwood.csv")
+
+lambda_1<-sum(petrifiedwood$X1intLength[1:16])/(12*1000)
+
+lambda_2<-sum(petrifiedwood$X2intLength[1:39])/(12*1000)
+
+both_samples<-c(lambda_1,lambda_2)
+est_percent_cover<-mean(both_samples)
+SE<-sd(both_samples)
+
+#90 CI for number of  tpHA#
+est_percent_cover + c(-1,1)* SE * qt(p=.95,df=1)
+
+```
+
+```{r}
+lambda_1_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X1intLength[1:16]/1000))
+
+lambda_2_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X2intLength[1:39]/1000))
+
+both_samples_count<-c(lambda_1_count,lambda_2_count)
+
+est_number_per_ha<-mean(both_samples)*1000
+  
+SE<-sd(both_samples_count)
+```
+
