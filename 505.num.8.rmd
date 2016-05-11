@@ -2,38 +2,43 @@
 title: 'FORS505 #8'
 author: "Colin Kirkmire"
 date: "May 6, 2016"
-output: word_document
+output: pdf_document
 ---
-
+(4)
 ```{r}
 petrifiedwood <- read.csv("C:/Users/Colin/Desktop/petrifiedwood.csv")
+petrifiedwood<-petrifiedwood[-c(40:4424), ] 
 
-lambda_1<-sum(petrifiedwood$X1intLength[1:16])/(12*1000)
+petrifiedwood$rad1<-petrifiedwood$X1circ/(2*pi)
+petrifiedwood$area1<-(petrifiedwood$rad1^2)*pi
+petrifiedwood$rad2<-petrifiedwood$X2circ/(2*pi)
+petrifiedwood$area2<-(petrifiedwood$rad2^2)*pi
 
-lambda_2<-sum(petrifiedwood$X2intLength[1:39])/(12*1000)
+lambda_1<-(pi/(12*1000))*sum(petrifiedwood$area1[1:16]/petrifiedwood$X1circ[1:16])
+lambda_2<-(pi/(12*1000))*sum(petrifiedwood$area2[1:39]/petrifiedwood$X2circ[1:39])
 
-both_samples<-c(lambda_1,lambda_2)
+both_samples<-c(lambda_1*100,lambda_2*100)
 est_percent_cover<-mean(both_samples)
+est_percent_cover
 SE1<-sd(both_samples)/sqrt(length(both_samples))
 
 #90% CI for Percentage Cover#
 est_percent_cover + c(-1,1)* SE1 * qt(p=.90,df=1)
-
-
 ```
-
+(5)
 ```{r}
-lambda_1_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X1intLength[1:16]/1000))*10000
-
-lambda_2_count<-(3.14/(2*12))*sum(1/(petrifiedwood$X2intLength[1:39]/1000))*10000
+lambda_1_count<-(pi/(12))*sum(1/(petrifiedwood$X1circ[1:16]/1000))*10000
+lambda_2_count<-(pi/(12))*sum(1/(petrifiedwood$X2circ[1:39]/1000))*10000
 
 both_samples_count<-c(lambda_1_count,lambda_2_count)
 
 est_number_per_ha<-mean(both_samples_count)
-  
-SE2<-(sd(both_samples_count)/sqrt(length(both_samples_count)))
+est_number_per_ha
+
+SE2<-sd(both_samples_count)/sqrt(length(both_samples_count))
+SE2
 
 #90% CI for number of  number of petrified wood particles per hectare#
-est_number_per_ha + c(-1,1)* SE2 * qt(p=90,df=1)
+est_number_per_ha + c(-1,1) * SE2 * qt(p=.90,df=1)
 ```
 

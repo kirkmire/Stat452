@@ -5,8 +5,7 @@ date: "May 8, 2016"
 output: word_document
 ---
 
-HW[1]: A company specializing in “spam” mail wants to know what attracts customers to open their spam mail. They send 5000 pieces of mail out, with sometimes using the
-first NAME on the envelope and sometimes not, as well as sometimes describing an OFFER on the envelope face, and sometimes not. Results are shown in the table below,
+HW[1]: A company specializing in “spam” mail wants to know what attracts customers to open their spam mail. They send 5000 pieces of mail out, with sometimes using the first NAME on the envelope and sometimes not, as well as sometimes describing an OFFER on the envelope face, and sometimes not. Results are shown in the table below,
 along with the spam.csv file which describes the data.
 
 We want to test the logistic model
@@ -15,7 +14,6 @@ logit(OPENED)=β0 + β1 FIRST+ β2OFFER + interactions(if any)
 Run a study to see if any of these things get customers to open the mail.
 
 ```{r}
-
 spam <- read.csv("G:/STAT 458/Lab13/spam.csv")
 
 spam$unopened<-spam$total-spam$opened
@@ -44,7 +42,7 @@ An additive model appears to be appropriate based on the interaction plot above 
 
 spam$unopened<-spam$total-spam$opened
 
-no_int<-glm(formula=cbind(spam$opened,spam$unopened)~ spam$name*spam$offer, family=binomial(logit))
+no_int<-glm(formula=cbind(spam$opened,spam$unopened)~ spam$name+spam$offer, family=binomial(logit))
 
 int_model<-glm(formula=cbind(spam$opened,spam$unopened)~ spam$name*spam$offer, family=binomial(logit))
 
@@ -61,14 +59,12 @@ Since residual deviance does not decrease significantly (p=.39) according to the
 
 
 ```{r}
-
 est_coefs<-no_int_sum$coefficients[1:3,1]
 
 tbl<-cbind(confint(no_int,level=.95),est_coefs)
 
-
 #Odds CI for Name#
-exp(tbl[3,1:3])
+exp(tbl[2,1:3])
 
 #Odds CI for Offer#
 exp(tbl[3,1:3])
@@ -76,10 +72,7 @@ exp(tbl[3,1:3])
 ```
 The odds of a customer opening the spam mail increases by an estimated 1.4 times (95% CI between .84 and 2.38 when name is included on the envelope and offer is held constant. This indicates some inconclusiveness about the effect of including the name on the envelope beacue the interval conatins values less than 1 and is fairly wide.
 
-In contrast, the odds of a customer opening the spam mail increases by 
-
-
-
+In contrast, the odds of a customer opening the spam mail increases by 1.61 (95% CI between .97 and 2.77) when an offer is included in the spam mail.  Although this CI also includes values less than one, we can be reasonably certain that the effect of an offer increases the odds of a customer opening the spam because a vast majority of the CI lies above one.
 
 
 ```{r}
@@ -91,6 +84,40 @@ curve(predict(add_log_model,newdata=data.frame(GPA=x,Sex="F",MCAT=36),type="resp
 curve(predict(add_log_model,newdata=data.frame(GPA=x,Sex="M",MCAT=36),type="response"),lty=2,add=T)
 ```
 
+
+HW[2]: The data set blood.csv is a study conducted to examine the extent to which
+red blood cells settle out of suspension in blood plasma: sedimentation rate is related
+to 2 proteins that are present in blood plasma, fibrinogen and g globulin. Researchers
+want to know if there is relationship between these proteins and the health of the
+patient (1 = healthy, 0 = not healthy). So, health is the response variable of this
+logistic model, with predictors being fibrinogen and globulin. Perform an analysis
+of this logistic model to determine if either of these proteins, or any interaction,
+predicts the health of the patient who gave the blood sample.
+Use the data set blood.csv. Find the logistic regression model and state the
+significant model (the model with significant parameters, including any interaction
+parameters). Comment on the model significance, using the anova() results. The
+original blood.csv file is partially shown below.
+
+
+```{r}
+blood <- read.csv("G:/STAT 458/Lab13/blood.csv")
+
+int_model<-glm(formula=cbind(spam$opened,spam$unopened)~ spam$name*spam$offer, family=binomial(logit))
+
+#Interaction Plot for Name and Offer#
+library(ggplot2)
+
+ggplot(blood, aes(y=opened,x=name, color=factor(offer)))+
+  geom_point(size=3)+
+  ggtitle("Number Opened vs Name on Envelope")+
+  xlab("Name on Envelope")+
+  ylab("Number of Customers that Opened")+
+  labs(color="Offer")+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14))
+
+
+```
 
 
 
